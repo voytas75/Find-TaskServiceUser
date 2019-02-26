@@ -184,7 +184,7 @@
         Write-Verbose -Message 'display tasks'
         Write-Output "Task with author or start as $user"
         # split problem - to TODO
-        $tasks | %{ $b=$_.split(',');write-host $b[0], $b[1]}
+        $tasks | ForEach-Object { $b=$_.split(',');write-host $b[0], $b[1]}
         $tasks | ForEach-Object {LogWrite $_}
       } else {
         LogWrite "$(get-date): No tasks"
