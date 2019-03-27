@@ -32,22 +32,14 @@
     -----------
     Stream two computers names to cmdlet to find services and tasks:
 .LINK
-   http://voytas.net
+   https://github.com/voytas75
 .LINK
    http://gallery.technet.microsoft.com/Find-tasks-and-53d1a77b
 .NOTES
-   Voytas
-
-   version 1.2, 26-5-2014:
-      - add logging to env:TEMP and verbose
-      - minor changes
-   version 1.1, 5-5-2014:
-      - minor changes
-   version 1.0, may 2014:
-      - first build of cmdlet
+   version 1.0, 27.03.2019:
+      - first build of module created from function 
 #>
-
-    [CmdletBinding()]
+  [CmdletBinding()]
     Param
     (
         #Computer
@@ -59,11 +51,10 @@
                    HelpMessage='Computer NetBIOS, DNS name or IP.'
                    )]
         [Alias('MachineName','Server')]
-        [string[]]
-        $Computer=$env:COMPUTERNAME,
+        [string[]]$Computer=$env:COMPUTERNAME,
 
         [parameter(Mandatory=$false,
-                   HelpMessage='User name to search services and/or tasks.'
+                   HelpMessage='User name to search services and/or tasks. '
                   )]
         [string]$User='Administrator',
 
@@ -95,10 +86,14 @@
 
     Begin
     {
-    Write-Verbose -Message 'start of begin block'
     $ErrorActionPreference_ = $ErrorActionPreference
     $ErrorActionPreference = 'SilentlyContinue'
-
+      if ($user -eq "administrator") {
+        Write-Host "Set default user: Administrator" -ForegroundColor Cyan
+      }
+      if ($computer -eq $env:COMPUTERNAME) {
+        Write-Host "Set default computer: $env:COMPUTERNAME (localhost)" -ForegroundColor Cyan
+      }      
     if (!$service -and !$task) {
     Write-Output '
     Examples:
@@ -108,74 +103,31 @@
       "comp3" | Find-TaskServiceUser -Service
     '
     }
-    function LogWrite {
-      param([string]$logstring)
-      if ($Log) {
-        Write-Verbose -Message 'log update'
-        Add-Content $logfile -Value $logstring
-      }
-    }
 
-    function Search-ServiceUser {
-      param (
-      [parameter(mandatory=$true,position=0)]
-      [string[]]$computer,
-
-      [parameter(mandatory=$false,position=1)]
-      [string]$user
-      )
-    $filter = "startname like '%$($user)%'"
-    Write-Verbose -Message 'query WMI of services with filter'
-    $service_ = Get-WmiObject win32_service -filter "$filter" -ComputerName $computer
-    if ($service_) {
-      Write-Verbose -Message 'return WMI of Services with filter'
-      return $service_
-      #New-Object -TypeName psobject -Property @{`
-      #Server = $service_.Systemname;
-      #Servicename = $service_.Name;
-      #ServicePath =  $service_.Pathname;
-      #ServiceDisplayName = $service_.Displayname;
-      #StartUser = $service_.Startname;
-      #ServiceState = $service_.state
-      #}
-    } # end function Search-ServiceUser
-}
     
-    function Search-TaskUser {
-    param(
-    [string]$server,
-
-    [string]$user
-    )
-        Write-Verbose -Message 'query tasks'
-        $task_=Invoke-Expression "schtasks /query /s $server /fo csv /v"
-        $match_ = "$user"
-        Write-Verbose -Message 'filter tasks'
-        $task_ | Where-Object {$_ -match $match_} 
-    }
 
     LogWrite "---------$(get-date)---------"
-    Write-Verbose -Message 'end of begin block'
-    if ($Log) { Write-Verbose "Log File: $($Logfile)" }
+   
     } # end BEGIN block
     Process
     {
-    Write-Verbose -Message 'start of process block'
+#   Write-Verbose -Message 'start of process block'
     if ($service) {    
-        write-host "Searching services with user: $($user.trim().toupper()) on machine: $($computer.trim().toupper())"
+        write-host "Searching services with user: ""$($user.trim().toupper())"" on machine: ""$($computer.trim().toupper())"""
         LogWrite "$(get-date): Searching services with user: $($user.trim().toupper()) on machine: $($computer.trim().toupper())"
         $comp = $computer.Trim()
         $services = Search-ServiceUser -computer $comp -user $user
       if ($services) {
+        Write-Verbose "services found"
           LogWrite "$(get-date): Services:"
-          Write-Verbose -Message 'display services'
+#          Write-Verbose -Message 'display services'
           $output = $services | select-object SystemName,Name,DisplayName,StartName,State | Format-Table -AutoSize
           $output
           $output = $services | select-object SystemName,Name,DisplayName,StartName,State
           $output | ForEach-Object {LogWrite $_}
       } else {
-        LogWrite "$(get-date): No services"
-       Write-Output 'No services'
+        LogWrite "$(get-date): No services found on computer ""$computer"" for user ""$user"""
+       Write-Output "No services found on computer ""$computer"" for user ""$user"""
       }
     }
     if ($task){
@@ -189,16 +141,17 @@
         $tasks | ForEach-Object { $b=$_.split(',');write-host $b[0], $b[1]}
         $tasks | ForEach-Object {LogWrite $_}
       } else {
-        LogWrite "$(get-date): No tasks"
-        Write-Output 'No tasks'
+        LogWrite "$(get-date): No tasks on computer ""$computer"" for user ""$user"""
+        Write-Output "No tasks foundon computer ""$computer"" for user ""$user"""
       }
     }
-    Write-Verbose -Message 'end of process block'
+#    Write-Verbose -Message 'end of process block'
     } # end PROCESS block
     End
     {
-    Write-Verbose -Message 'start of end block'
+#    Write-Verbose -Message 'start of end block'
+if ($Log) { Write-Host "Log File: $($Logfile)" -ForegroundColor Gray}
     $ErrorActionPreference = $ErrorActionPreference_
-    Write-Verbose -Message 'end of end block'
+#    Write-Verbose -Message 'end of end block'
     } # end END block
 } # end function Find-TaskServiceUser

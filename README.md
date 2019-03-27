@@ -1,5 +1,5 @@
 <h1>Find-TaskServiceUser</h1>
-Finding Tasks, Services on remote/local computer with specific user
+Module is for finding Tasks, Services on remote/local computer with specific user
 
 <h2>Examples:</h2>
 <code>Find-TaskServiceUser -Computer computerA -User UserA -Service -Task</code></br>
