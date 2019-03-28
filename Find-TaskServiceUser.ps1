@@ -67,64 +67,60 @@ Path with file name where logging output. Default value is [$env:TEMP]\find-task
     $ErrorActionPreference = 'SilentlyContinue'
     
     if (!$service -and !$task) {
-      Write-Host "You must provide 'service' or/and 'task' parameter`n"
-      Write-Host 'Examples:'
-      Write-Host '  Find-TaskServiceUser -Computer computerA -User UserA -Service -Task'
-      Write-Host '  Find-TaskServiceUser -Computer computerB -User UserB -Task -Log' 
-      Write-Host '  "comp1","comp2" | Find-TaskServiceUser -Service -Task'
-      Write-Host '  "comp3" | Find-TaskServiceUser -Service'
+      Write-output "You must provide 'service' or/and 'task' parameter`n"
+      Write-output 'Examples:'
+      Write-output '  Find-TaskServiceUser -Computer "WSRV00" -User "BobbyK" -Service -Task'
+      Write-output '  Find-TaskServiceUser -Computer "WSRV01" -User "BobbyK" -Task -Log' 
+      Write-output '  "WSRV00","WSRV03" | Find-TaskServiceUser -Service -Task'
+      Write-output '  "WSRV04" | Find-TaskServiceUser -Service'
     } else {
       if ($user -eq "administrator") {
-        Write-Host "Set default user: Administrator" -ForegroundColor Cyan
+        Write-Output "Set default user: Administrator"
       }
       if ($computer -eq $env:COMPUTERNAME) {
-        Write-Host "Set default computer: $env:COMPUTERNAME (localhost)" -ForegroundColor Cyan
+        Write-output "Set default computer: $env:COMPUTERNAME (localhost)"
       }  
     }
     LogWrite "---------$(get-date)---------"
   } # end BEGIN block
   Process {
-    #Write-Verbose -Message 'start of process block'
-    if ($service) {    
-      write-host "Searching system services with user: ""$($user.trim().toupper())"" on machine: ""$($computer.trim().toupper())"""
-      LogWrite "$(get-date): Searching services with user: ""$($user.trim().toupper())"" on machine: ""$($computer.trim().toupper())"""
-      $comp = $computer.Trim()
-      $services = Search-ServiceUser -computer $comp -user $user
+    foreach ($item in $Computer) {
+      if ($service) {    
+      Write-output "Searching system services with user: ""$($user.trim().toupper())"" on machine: ""$($item.trim().toupper())"""
+      LogWrite "$(get-date): Searching services with user: ""$($user.trim().toupper())"" on machine: ""$($item.trim().toupper())"""
+      $services = Search-ServiceUser -computer $item.Trim() -user $user
       if ($services) {
         Write-Verbose "services found"
         LogWrite "$(get-date): Services:"
-        #Write-Verbose -Message 'display services'
         $output = $services | select-object SystemName,Name,DisplayName,StartName,State | Format-Table -AutoSize
         $output
         $output = $services | select-object SystemName,Name,DisplayName,StartName,State
         $output | ForEach-Object {LogWrite $_}
       } else {
-        LogWrite "$(get-date): No services found on computer ""$computer"" for user ""$user"""
-        Write-Host "No services found on computer ""$computer"" for user ""$user"""
+        LogWrite "$(get-date): No services found on computer ""$item"" for user ""$user"""
+        Write-output "No services found on computer ""$item"" for user ""$user"""
       }
-    }
-    if ($task) {
-      Write-Host "Searching tasks with user: ""$($user.trim().toupper())"" on machine: ""$($computer.trim().toupper())"""
-      LogWrite "$(get-date): Searching tasks with user: ""$($user.trim().toupper())"" on machine: ""$($computer.trim().toupper())"""
-      $tasks = Search-TaskUser -server $computer -user $user
+      }
+      if ($task) {
+      Write-output "Searching tasks with user: ""$($user.trim().toupper())"" on machine: ""$($item.trim().toupper())"""
+      LogWrite "$(get-date): Searching tasks with user: ""$($user.trim().toupper())"" on machine: ""$($item.trim().toupper())"""
+      $tasks = Search-TaskUser -server $item.trim() -user $user
       if ($tasks) {
         LogWrite "$(get-date): Tasks:"
         Write-Verbose -Message 'display tasks'
-        Write-Host "Task with author or start as $user"
+        Write-output "Task with author or start as $user"
         # split problem - to TODO
-        $tasks | ForEach-Object { $b=$_.split(',');write-host $b[0], $b[1]}
+        $tasks | ForEach-Object { $b=$_.split(',');Write-output $b[0], $b[1]}
         $tasks | ForEach-Object {LogWrite $_}
       } else {
-        LogWrite "$(get-date): No tasks on computer ""$computer"" for user ""$user"""
-        Write-Host "No tasks foundon computer ""$computer"" for user ""$user"""
+        LogWrite "$(get-date): No tasks on computer ""$item"" for user ""$user"""
+        Write-output "No tasks foundon computer ""$item"" for user ""$user"""
+      }
       }
     }
-    #Write-Verbose -Message 'end of process block'
   } # end PROCESS block
   End {
-    #Write-Verbose -Message 'start of end block'
-    if ($Log) { Write-Host "Log File: $($Logfile)" -ForegroundColor Gray}
+    if ($Log) { Write-output "Log File: $($Logfile)" -ForegroundColor Gray}
     $ErrorActionPreference = $ErrorActionPreference_
-    #Write-Verbose -Message 'end of end block'
   } # end END block
 } # end Find-TaskServiceUser function
