@@ -63,8 +63,8 @@ Path with file name where logging output. Default value is [$env:TEMP]\find-task
     [string]$Logfile="$env:TEMP\Find-TaskServiceUser.log"
   )
   Begin {
-    $ErrorActionPreference_ = $ErrorActionPreference
-    $ErrorActionPreference = 'SilentlyContinue'
+    #$ErrorActionPreference_ = $ErrorActionPreference
+    #$ErrorActionPreference = 'SilentlyContinue'
     
     if (!$service -and !$task) {
       Write-output "You must provide 'service' or/and 'task' parameter`n"
@@ -120,7 +120,7 @@ Path with file name where logging output. Default value is [$env:TEMP]\find-task
     }
   } # end PROCESS block
   End {
-    if ($Log) { Write-output "Log File: $($Logfile)" -ForegroundColor Gray}
-    $ErrorActionPreference = $ErrorActionPreference_
+    if ($Log) { Write-output "Log File: $($Logfile)"}
+    #$ErrorActionPreference = $ErrorActionPreference_
   } # end END block
 } # end Find-TaskServiceUser function
