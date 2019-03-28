@@ -120,7 +120,7 @@ Path with file name where logging output. Default value is [$env:TEMP]\find-task
     }
   } # end PROCESS block
   End {
-    if ($Log) { Write-output "Log File: $($Logfile)"}
+    if ($Log) { Write-output "`nLog File: $($Logfile)"}
     #$ErrorActionPreference = $ErrorActionPreference_
   } # end END block
 } # end Find-TaskServiceUser function
