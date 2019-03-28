@@ -1,12 +1,23 @@
-function Search-TaskUser {
+function Search-TaskUser{
+    [CmdletBinding()]
     param(
-    [string]$server,
+        [string]$server,
 
-    [string]$user
+        [string]$user
     )
-        Write-Verbose -Message 'query tasks'
-        $task_=Invoke-Expression "schtasks /query /s $server /fo csv /v"
+    process {
+        Write-Verbose -Message 'running system command ''schtasks'''
+        try {
+            $task_=Invoke-Expression "schtasks /query /s $server /fo csv /v" -ErrorAction Stop
+        }
+        catch {
+            Write-Host $_.Exception.Message
+        }
         $match_ = "$user"
         Write-Verbose -Message 'filter tasks'
         $task_ | Where-Object {$_ -match $match_} 
     }
+    end {
+
+    }
+}

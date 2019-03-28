@@ -1,11 +1,12 @@
 function Search-ServiceUser {
-    param (
+  [CmdletBinding()]
+  param (
     [parameter(mandatory=$true,position=0)]
     [string[]]$computer,
 
     [parameter(mandatory=$false,position=1)]
     [string]$user
-    )
+  )
   $filter = "startname like '%$($user)%'"
   Write-Verbose -Message 'query WMI of services with filter'
   $service_ = Get-WmiObject win32_service -filter "$filter" -ComputerName $computer
