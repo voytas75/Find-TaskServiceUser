@@ -92,10 +92,10 @@ Path with file name where logging output. Default value is [$env:TEMP]\find-task
         if ($services) {
           Write-Verbose "services found"
           LogWrite "$(get-date): Services:"
-          $output = $services | select-object SystemName,Name,DisplayName,StartName,State | Format-Table -AutoSize
+          $output1 = $services | select-object SystemName,Name,DisplayName,StartName,State
+          $output = $output1 | Format-Table -AutoSize
           $output
-          $output = $services | select-object SystemName,Name,DisplayName,StartName,State
-          $output | ForEach-Object {LogWrite $_}
+          $output1 | ForEach-Object {LogWrite $_}
         } else {
           LogWrite "$(get-date): No services found on computer ""$item"" for user ""$user"""
           Write-output "No services found on computer ""$item"" for user ""$user"""
