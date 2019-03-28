@@ -11,7 +11,7 @@ function Search-TaskUser{
             $task_=Invoke-Expression "schtasks /query /s $server /fo csv /v" -ErrorAction Stop
         }
         catch {
-            Write-Host $_.Exception.Message
+            Write-Error -Message "Failed to invoke ""schtasks"": $_"
         }
         $match_ = "$user"
         Write-Verbose -Message 'filter tasks'
