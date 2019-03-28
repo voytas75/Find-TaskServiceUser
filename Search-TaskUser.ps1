@@ -22,9 +22,9 @@ Function Search-TaskUser {
                 Write-Error -Message "Failed to invoke ""schtasks"": $_"
             }
         } 
-        $match_ = "$user"
         Write-Verbose -Message 'filter tasks'
-        $task_ | Where-Object {$_ -match $match_} 
+        $a=$task_ | Where-Object {$_ -match $user} 
+        return $task_[0],$a
     }
     end {
 
