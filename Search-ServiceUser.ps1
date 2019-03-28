@@ -1,4 +1,4 @@
-function Search-ServiceUser {
+Function Search-ServiceUser {
   [CmdletBinding()]
   param (
     [parameter(mandatory=$true,position=0)]
@@ -8,10 +8,15 @@ function Search-ServiceUser {
     [string]$user
   )
   $filter = "startname like '%$($user)%'"
-  Write-Verbose -Message 'query WMI of services with filter'
-  $service_ = Get-WmiObject win32_service -filter "$filter" -ComputerName $computer
+  Write-Verbose -Message "WMI query for system services with Service Logon Account as ""$user"""
+  try {
+  $service_ = Get-WmiObject win32_service -filter "$filter" -ComputerName $computer -ErrorAction Stop
+  } 
+  catch {
+    Write-Error -Message "Failed WMI query for system services with Service Logon Account as ""$user"": $_"
+  }
   if ($service_) {
-    Write-Verbose -Message 'return WMI of Services with filter'
+    Write-Verbose -Message "Return WMI query data"
     return $service_
     #New-Object -TypeName psobject -Property @{`
     #Server = $service_.Systemname;
