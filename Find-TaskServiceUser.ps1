@@ -88,12 +88,7 @@
     {
     $ErrorActionPreference_ = $ErrorActionPreference
     $ErrorActionPreference = 'SilentlyContinue'
-      if ($user -eq "administrator") {
-        Write-Host "Set default user: Administrator" -ForegroundColor Cyan
-      }
-      if ($computer -eq $env:COMPUTERNAME) {
-        Write-Host "Set default computer: $env:COMPUTERNAME (localhost)" -ForegroundColor Cyan
-      }      
+    
     if (!$service -and !$task) {
     Write-Output '
     Examples:
@@ -102,6 +97,13 @@
       "comp1","comp2" | Find-TaskServiceUser -Service -Task
       "comp3" | Find-TaskServiceUser -Service
     '
+    } else {
+      if ($user -eq "administrator") {
+        Write-Host "Set default user: Administrator" -ForegroundColor Cyan
+      }
+      if ($computer -eq $env:COMPUTERNAME) {
+        Write-Host "Set default computer: $env:COMPUTERNAME (localhost)" -ForegroundColor Cyan
+      }  
     }
 
     
