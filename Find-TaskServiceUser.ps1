@@ -109,9 +109,9 @@ Path with file name where logging output. Default value is [$env:TEMP]\find-task
           LogWrite "$(get-date): Tasks:"
           Write-Verbose -Message 'display tasks'
           Write-output "Found scheduled tasks where ""$user"" matched task author or 'run as user'"
-          $tasks | ConvertFrom-Csv | Select-Object Hostname, Taskname, Author, "Run as user"
-          #$tasks | ForEach-Object { $b=$_.split(',');Write-output $b[0], $b[1]}
-          #$tasks | ForEach-Object {LogWrite $_}
+          $tasksdata = $tasks | ConvertFrom-Csv | Select-Object Hostname, Taskname, Author, "Run as user"
+          $tasksdata
+          $tasksdata | ForEach-Object {LogWrite $_}
         } else {
           LogWrite "$(get-date): No tasks on computer ""$item"" for user ""$user"""
           Write-output "No tasks foundon computer ""$item"" for user ""$user"""
