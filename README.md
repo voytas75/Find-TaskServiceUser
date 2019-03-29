@@ -43,4 +43,4 @@ See also the list of [contributors](https://github.com/voytas75/Find-TaskService
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the MIT License - see the [LICENSE.md](Find-TaskServiceUser/LICENSE) file for details
