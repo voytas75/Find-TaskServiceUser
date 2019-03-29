@@ -1,4 +1,4 @@
-function LogWrite {
+function Write-Log {
     param([string]$logstring)
     if ($Log) {
       Write-Debug -Message "Append ""$logstring"" to log file: ""$logfile"""

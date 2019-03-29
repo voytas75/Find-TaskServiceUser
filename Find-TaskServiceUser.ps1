@@ -81,39 +81,39 @@ Path with file name where logging output. Default value is [$env:TEMP]\find-task
         Write-output "Set default computer: $env:COMPUTERNAME (localhost)"
       }  
     }
-    LogWrite "---------$(get-date)---------"
+    Write-Log "---------$(get-date)---------"
   } # end BEGIN block
   Process {
     foreach ($item in $Computer) {
       if ($service) {    
       Write-output "Searching system services with user: ""$($user.trim().toupper())"" on machine: ""$($item.trim().toupper())"""
-      LogWrite "$(get-date): Searching services with user: ""$($user.trim().toupper())"" on machine: ""$($item.trim().toupper())"""
+      Write-Log "$(get-date): Searching services with user: ""$($user.trim().toupper())"" on machine: ""$($item.trim().toupper())"""
       $services = Search-ServiceUser -computer $item.Trim() -user $user
         if ($services) {
           Write-Verbose "services found"
-          LogWrite "$(get-date): Services:"
+          Write-Log "$(get-date): Services:"
           $output1 = $services | select-object SystemName,Name,DisplayName,StartName,State
           $output = $output1 | Format-Table -AutoSize
           $output
-          $output1 | ForEach-Object {LogWrite $_}
+          $output1 | ForEach-Object {Write-Log $_}
         } else {
-          LogWrite "$(get-date): No services found on computer ""$item"" for user ""$user"""
+          Write-Log "$(get-date): No services found on computer ""$item"" for user ""$user"""
           Write-output "No services found on computer ""$item"" for user ""$user"""
         }
       }
       if ($task) {
         Write-output "Searching tasks with user: ""$($user.trim().toupper())"" on machine: ""$($item.trim().toupper())"""
-        LogWrite "$(get-date): Searching tasks with user: ""$($user.trim().toupper())"" on machine: ""$($item.trim().toupper())"""
+        Write-Log "$(get-date): Searching tasks with user: ""$($user.trim().toupper())"" on machine: ""$($item.trim().toupper())"""
         $tasks = Search-TaskUser -server $item.trim() -user $user
         if ($tasks) {
-          LogWrite "$(get-date): Tasks:"
+          Write-Log "$(get-date): Tasks:"
           Write-Verbose -Message 'display tasks'
           Write-output "Found scheduled tasks where ""$user"" matched task author or 'run as user'"
           $tasksdata = $tasks | ConvertFrom-Csv | Select-Object Hostname, Taskname, Author, "Run as user"
           $tasksdata
-          $tasksdata | ForEach-Object {LogWrite $_}
+          $tasksdata | ForEach-Object {Write-Log $_}
         } else {
-          LogWrite "$(get-date): No tasks on computer ""$item"" for user ""$user"""
+          Write-Log "$(get-date): No tasks on computer ""$item"" for user ""$user"""
           Write-output "No tasks foundon computer ""$item"" for user ""$user"""
         }
       }
