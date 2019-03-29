@@ -30,3 +30,17 @@ Find-TaskServiceUser -Computer "WSRV00" -User "BobbyK" -Service -Task -Log
 ```
 @("WSRV01","WSRV02"), "WSRV03" | Find-TaskServiceUser -Task - User "BobbyK"
 ```
+
+## Versioning
+
+We use [SemVer](http://semver.org/) for versioning.
+
+## Authors
+
+* **Wojciech Napierała** - *Initial work* - [Voytas75](https://github.com/voytas75)
+
+See also the list of [contributors](https://github.com/voytas75/Find-TaskServiceUser/graphs/contributors) who participated in this project.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
