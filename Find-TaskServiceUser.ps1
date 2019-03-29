@@ -20,24 +20,26 @@ A switch to enable logging of output data to a log file. The log file with the p
 .PARAMETER Logfile
 Path with file name where logging output. Default value is [$env:TEMP]\find-taskserviceuser.log. Works only with Log switch.
 .EXAMPLE
-    Find-TaskServiceUser -Computer "WSRV00" -User "BobbyK" -Service -Task -Log
+Find-TaskServiceUser -Computer "WSRV00" -User "BobbyK" -Service -Task -Log
 
-    Description
-    -----------
-    Find system services and scheduled tasks on "WSRV00" for user "BobbyK" with logging output to file.
+Description
+-----------
+Find system services and scheduled tasks on "WSRV00" for user "BobbyK" with logging output to file.
 .EXAMPLE
-   "WSRV01","WSRV02" | Find-TaskServiceUser -Service -Task
+"WSRV01","WSRV02" | Find-TaskServiceUser -Service -Task
 
-    Description
-    -----------
-    Find system services and scheduled tasks on computers "WSRV01", "WSRV02" for user "Administrator"
+Description
+-----------
+Find system services and scheduled tasks on computers "WSRV01", "WSRV02" for user "Administrator"
 .LINK
-   https://github.com/voytas75
+https://github.com/voytas75/Find-TaskServiceUser
 .LINK
-   http://gallery.technet.microsoft.com/Find-tasks-and-53d1a77b
+https://www.powershellgallery.com/packages/Find-TaskServiceUser/1.0
 .NOTES
-   version 1.0, 27.03.2019:
-      - first build of module created from function 
+version 1.0.1, 29.03.2019:
+- minor bug fixes.
+version 1.0, 27.03.2019:
+- first build of module created from function.
 #>
   [CmdletBinding()]
   Param(
