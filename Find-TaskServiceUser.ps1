@@ -35,9 +35,10 @@ https://github.com/voytas75/Find-TaskServiceUser
 .LINK
 https://www.powershellgallery.com/packages/Find-TaskServiceUser
 .NOTES
-version 1.2.0:
+version 1.2.0, 30.03.2019:
+- improved find of tasks
+- tasks and services results grouped by computer 
 - minor changes
-- improved find of tasks 
 version 1.1.0, 30.03.2019:
 - change private functions names
 - minor fixes.
