@@ -95,53 +95,55 @@ version 1.0, 27.03.2019:
           Write-Log "$(get-date): Finding services with user: ""$($user.trim().toupper())"" on machine: ""$($item.trim().toupper())"""
         }
         $services = Find-ServiceUser -computer $item.Trim() -user $user
-          if ($services) {
-            Write-Verbose "services found"
-            if ($Log) {
-              Write-Log "$(get-date): Services:"
-            }
-            Write-output "Found system service(s) where ""$user"" matches 'Service Logon Account'"
-            $output1 = $services | select-object SystemName,Name, StartName,State
-            $output1 | Format-Table -AutoSize
-            if ($Log) {
-              $output1 | ForEach-Object { Write-Log $_ }
-            }
-          } else {
-            if ($Log) {
-              Write-Log "$(get-date): No services found on computer ""$item"" for user ""$user"""
-            }
-            Write-output "No services found on computer ""$item"" for user ""$user"""
-          }
-        }
-        if ($task) {
-          Write-output "Finding tasks with user: ""$($user.trim().toupper())"" on machine: ""$($item.trim().toupper())"""
+        if ($services) {
+          Write-Verbose "System services were found"
           if ($Log) {
-            Write-Log "$(get-date): Finding tasks with user: ""$($user.trim().toupper())"" on machine: ""$($item.trim().toupper())"""
+            Write-Log "$(get-date): System services:"
           }
-          $tasks = Find-TaskUser -server $item.trim() -user $user
-          if ($tasks) {
-            if ($Log) {
-              Write-Log "$(get-date): Tasks:"
-            }
-            Write-Verbose -Message 'display tasks'
-            Write-output "Found scheduled task(s) where ""$user"" matches task author or 'run as user'"
-            $tasksdata = $tasks | Select-Object Hostname, Taskname, Author, "Run as user" 
-            $tasksdata | Format-Table -AutoSize
-            if ($Log) {
-              $tasksdata | ForEach-Object { Write-Log $_ }
-            }
-          } else {
-            if ($Log) {
-              Write-Log "$(get-date): No tasks on computer ""$item"" for user ""$user"""
+          Write-output "Found system service(s) where ""$user"" matches 'Service Logon Account'"
+          $output1 = $services | select-object SystemName,Name, StartName,State
+          $output1 | Format-Table -AutoSize
+          if ($Log) {
+            $output1 | ForEach-Object { Write-Log $_ }            
           }
-          Write-output "No tasks foundon computer ""$item"" for user ""$user"""
+        } else {
+          if ($Log) {
+            Write-Log "$(get-date): No services found on computer ""$item"" for user ""$user"""
+          }
+          Write-output "No system services found on computer ""$item"" for user ""$user"""          
         }
       }
-    }
+    } # end foreach
+    foreach ($item in $Computer) {
+    if ($task) {
+      Write-output "Finding tasks with user: ""$($user.trim().toupper())"" on machine: ""$($item.trim().toupper())"""
+      if ($Log) {
+        Write-Log "$(get-date): Finding tasks with user: ""$($user.trim().toupper())"" on machine: ""$($item.trim().toupper())"""
+      }
+      $tasks = Find-TaskUser -server $item.trim() -user $user
+      if ($tasks) {
+        Write-Verbose "Scheduled tasks were found"
+        if ($Log) {
+          Write-Log "$(get-date): Scheduled tasks:"
+        }
+        Write-output "Found scheduled task(s) where ""$user"" matches task author or 'run as user'"
+        $tasksdata = $tasks | Select-Object Hostname, Taskname, Author, "Run as user" 
+        $tasksdata | Format-Table -AutoSize
+        if ($Log) {
+          $tasksdata | ForEach-Object { Write-Log $_ }
+        }
+        } else {
+          if ($Log) {
+            Write-Log "$(get-date): No scheduled tasks on computer ""$item"" for user ""$user"""
+          }
+          Write-output "No scheduled tasks found on computer ""$item"" for user ""$user"""
+        }
+      }
+    } # end foreach
   } # end PROCESS block
   End {
     if ($Log) { 
-      Write-output "`nLog File: $($Logfile)"
+      Write-output "Log File: $($Logfile)"
     }
   } # end END block
 } # end Find-TaskServiceUser function
