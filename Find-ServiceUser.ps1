@@ -1,4 +1,4 @@
-Function Search-ServiceUser {
+Function Find-ServiceUser {
   [CmdletBinding()]
   param (
     [parameter(mandatory=$true,position=0)]
@@ -26,5 +26,5 @@ Function Search-ServiceUser {
     #StartUser = $service_.Startname;
     #ServiceState = $service_.state
     #}
-  } # end function Search-ServiceUser
+  } # end function Find-ServiceUser
 }
