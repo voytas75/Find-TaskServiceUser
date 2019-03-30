@@ -100,9 +100,9 @@ version 1.0, 27.03.2019:
             if ($Log) {
               Write-Log "$(get-date): Services:"
             }
-            $output1 = $services | select-object SystemName,Name,DisplayName,StartName,State
-            $output = $output1 | Format-Table -AutoSize
-            $output
+            Write-output "Found system service(s) where ""$user"" matches 'Service Logon Account'"
+            $output1 = $services | select-object SystemName,Name, StartName,State
+            $output1 | Format-Table -AutoSize
             if ($Log) {
               $output1 | ForEach-Object { Write-Log $_ }
             }
@@ -124,9 +124,9 @@ version 1.0, 27.03.2019:
               Write-Log "$(get-date): Tasks:"
             }
             Write-Verbose -Message 'display tasks'
-            Write-output "Found scheduled tasks where ""$user"" matched task author or 'run as user'"
-            $tasksdata = $tasks | Select-Object Hostname, Taskname, Author, "Run as user"
-            $tasksdata
+            Write-output "Found scheduled task(s) where ""$user"" matches task author or 'run as user'"
+            $tasksdata = $tasks | Select-Object Hostname, Taskname, Author, "Run as user" 
+            $tasksdata | Format-Table -AutoSize
             if ($Log) {
               $tasksdata | ForEach-Object { Write-Log $_ }
             }
