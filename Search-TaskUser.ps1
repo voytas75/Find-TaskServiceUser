@@ -1,4 +1,4 @@
-Function Search-TaskUser {
+Function Find-TaskUser {
     [CmdletBinding()]
     param(
         [string]$server,

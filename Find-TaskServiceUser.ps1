@@ -88,7 +88,7 @@ version 1.0, 27.03.2019:
         if ($Log) {
           Write-Log "$(get-date): Searching services with user: ""$($user.trim().toupper())"" on machine: ""$($item.trim().toupper())"""
         }
-        $services = Search-ServiceUser -computer $item.Trim() -user $user
+        $services = Find-ServiceUser -computer $item.Trim() -user $user
           if ($services) {
             Write-Verbose "services found"
             if ($Log) {
@@ -112,7 +112,7 @@ version 1.0, 27.03.2019:
           if ($Log) {
             Write-Log "$(get-date): Searching tasks with user: ""$($user.trim().toupper())"" on machine: ""$($item.trim().toupper())"""
           }
-          $tasks = Search-TaskUser -server $item.trim() -user $user
+          $tasks = Find-TaskUser -server $item.trim() -user $user
           if ($tasks) {
             if ($Log) {
               Write-Log "$(get-date): Tasks:"
