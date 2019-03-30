@@ -7,25 +7,24 @@ Function Find-TaskUser {
     )
     process {
         Write-Verbose -Message 'running system command ''schtasks'''
-        if ($server -match $env:COMPUTERNAME) {
+        if ($server -match $env:COMPUTERNAME -or $server -eq "localhost") {
             try {
-                $task_=Invoke-Expression "schtasks /query /fo csv /v" -ErrorAction Stop
+                $tasks=Invoke-Expression "schtasks /query /fo csv /NH /v" -ErrorAction Stop
             }
             catch {
                 Write-Error -Message "Failed to invoke ""schtasks"": $_"
             }
         } else {
             try {
-                $task_=Invoke-Expression "schtasks /query /s $server /fo csv /v" -ErrorAction Stop
+                $tasks=Invoke-Expression "schtasks /query /s $server /NH /fo csv /v" -ErrorAction Stop
             }
             catch {
                 Write-Error -Message "Failed to invoke ""schtasks"": $_"
             }
         } 
         Write-Verbose -Message 'filtering tasks'
-        $a=$task_ | Where-Object {$_ -match $user}
-        # join header with data 
-        return $task_[0],$a
+        $header = "HostName","TaskName","Next Run Time","Status","Logon Mode","Last Run Time","Last Result","Author","Task To Run","Start In","Comment","Scheduled Task State","Idle Time","Power Management","Run As User","Delete Task If Not Rescheduled","Stop Task If Runs X Hours and X Mins","Schedule","Schedule Type","Start Time","Start Date","End Date","Days","Months","Repeat: Every","Repeat: Until: Time","Repeat: Until: Duration","Repeat: Stop If Still Running"
+        return $tasks | ConvertFrom-Csv -Header $header | Where-Object {$_."Run As User" -match $user -or $_."Author" -match $user}
     }
     end {
 
