@@ -7,13 +7,13 @@ Finding scheduled tasks, system services on local or remote computer by given us
 'Administrator' and local computer are default values.
 The results can be redirected to the log file (see 'log' parameter).
 .PARAMETER User
-User name to search scheduled tasks or system services. Default value is 'Administrator'.
+User name to find scheduled tasks or system services. Default value is 'Administrator'.
 .PARAMETER Computer
-Computer to search tasks/services. Default value is 'localhost' ($env:COMPUTERNAME).
+Computer to find tasks/services. Default value is 'localhost' ($env:COMPUTERNAME).
 .PARAMETER Task
-A Switch to enable searching scheduled tasks.
+A Switch to enable finding scheduled tasks.
 .PARAMETER Service
-A Switch to enable searching system services.
+A Switch to enable finding system services.
 .PARAMETER Log
 A switch to enable logging of output data to a log file. The log file with the path is defined in the "LogFile" parameter.
 .PARAMETER Logfile
@@ -46,13 +46,13 @@ version 1.0, 27.03.2019:
     [Alias('MachineName','Server')]
     [string[]]$Computer=$env:COMPUTERNAME,
 
-    [parameter(Mandatory=$false, HelpMessage='User name to search services and/or tasks.')]
+    [parameter(Mandatory=$false, HelpMessage='User name to find services and/or tasks.')]
     [string]$User='Administrator',
 
-    [parameter(Mandatory=$false, HelpMessage='Switch to search system services.')]
+    [parameter(Mandatory=$false, HelpMessage='Switch to find system services.')]
     [switch]$Service,
 
-    [parameter(Mandatory=$false, HelpMessage='Switch to search scheduled tasks.')]
+    [parameter(Mandatory=$false, HelpMessage='Switch to find scheduled tasks.')]
     [switch]$Task,
 
     [parameter(Mandatory=$false, HelpMessage='Switch to enable logging.')]
@@ -84,9 +84,9 @@ version 1.0, 27.03.2019:
   Process {
     foreach ($item in $Computer) {
       if ($service) {    
-        Write-output "Searching system services with user: ""$($user.trim().toupper())"" on machine: ""$($item.trim().toupper())"""
+        Write-output "Finding system services with user: ""$($user.trim().toupper())"" on machine: ""$($item.trim().toupper())"""
         if ($Log) {
-          Write-Log "$(get-date): Searching services with user: ""$($user.trim().toupper())"" on machine: ""$($item.trim().toupper())"""
+          Write-Log "$(get-date): Finding services with user: ""$($user.trim().toupper())"" on machine: ""$($item.trim().toupper())"""
         }
         $services = Find-ServiceUser -computer $item.Trim() -user $user
           if ($services) {
@@ -108,9 +108,9 @@ version 1.0, 27.03.2019:
           }
         }
         if ($task) {
-          Write-output "Searching tasks with user: ""$($user.trim().toupper())"" on machine: ""$($item.trim().toupper())"""
+          Write-output "Finding tasks with user: ""$($user.trim().toupper())"" on machine: ""$($item.trim().toupper())"""
           if ($Log) {
-            Write-Log "$(get-date): Searching tasks with user: ""$($user.trim().toupper())"" on machine: ""$($item.trim().toupper())"""
+            Write-Log "$(get-date): Finding tasks with user: ""$($user.trim().toupper())"" on machine: ""$($item.trim().toupper())"""
           }
           $tasks = Find-TaskUser -server $item.trim() -user $user
           if ($tasks) {
