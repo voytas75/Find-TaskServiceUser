@@ -33,8 +33,11 @@ Find system services and scheduled tasks on computers "WSRV01", "WSRV02" for use
 .LINK
 https://github.com/voytas75/Find-TaskServiceUser
 .LINK
-https://www.powershellgallery.com/packages/Find-TaskServiceUser/1.0
+https://www.powershellgallery.com/packages/Find-TaskServiceUser
 .NOTES
+version 1.1.0, 30.03.2019:
+- change private functions names
+- minor fixes.
 version 1.0.1, 29.03.2019:
 - minor bug fixes.
 version 1.0, 27.03.2019:
