@@ -122,7 +122,7 @@ version 1.0, 27.03.2019:
             }
             Write-Verbose -Message 'display tasks'
             Write-output "Found scheduled tasks where ""$user"" matched task author or 'run as user'"
-            $tasksdata = $tasks | ConvertFrom-Csv | Select-Object Hostname, Taskname, Author, "Run as user"
+            $tasksdata = $tasks | Select-Object Hostname, Taskname, Author, "Run as user"
             $tasksdata
             if ($Log) {
               $tasksdata | ForEach-Object { Write-Log $_ }
