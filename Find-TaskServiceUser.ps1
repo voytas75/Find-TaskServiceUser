@@ -83,46 +83,66 @@ version 1.0, 27.03.2019:
         Write-output "Set default computer: $env:COMPUTERNAME (localhost)"
       }  
     }
-    Write-Log "---------$(get-date)---------"
+    if ($Log) {
+      Write-Log "---------$(get-date)---------"
+    }
   } # end BEGIN block
   Process {
     foreach ($item in $Computer) {
       if ($service) {    
       Write-output "Searching system services with user: ""$($user.trim().toupper())"" on machine: ""$($item.trim().toupper())"""
-      Write-Log "$(get-date): Searching services with user: ""$($user.trim().toupper())"" on machine: ""$($item.trim().toupper())"""
+      if ($Log) {
+        Write-Log "$(get-date): Searching services with user: ""$($user.trim().toupper())"" on machine: ""$($item.trim().toupper())"""
+      }
       $services = Search-ServiceUser -computer $item.Trim() -user $user
         if ($services) {
           Write-Verbose "services found"
-          Write-Log "$(get-date): Services:"
+          if ($Log) {
+            Write-Log "$(get-date): Services:"
+          }
           $output1 = $services | select-object SystemName,Name,DisplayName,StartName,State
           $output = $output1 | Format-Table -AutoSize
           $output
-          $output1 | ForEach-Object {Write-Log $_}
+          if ($Log) {
+            $output1 | ForEach-Object {Write-Log $_}
+          }
         } else {
-          Write-Log "$(get-date): No services found on computer ""$item"" for user ""$user"""
+          if ($Log) {
+            Write-Log "$(get-date): No services found on computer ""$item"" for user ""$user"""
+          }
           Write-output "No services found on computer ""$item"" for user ""$user"""
         }
       }
       if ($task) {
         Write-output "Searching tasks with user: ""$($user.trim().toupper())"" on machine: ""$($item.trim().toupper())"""
-        Write-Log "$(get-date): Searching tasks with user: ""$($user.trim().toupper())"" on machine: ""$($item.trim().toupper())"""
+        if ($Log) {
+          Write-Log "$(get-date): Searching tasks with user: ""$($user.trim().toupper())"" on machine: ""$($item.trim().toupper())"""
+        }
         $tasks = Search-TaskUser -server $item.trim() -user $user
         if ($tasks) {
-          Write-Log "$(get-date): Tasks:"
+          if ($Log) {
+            Write-Log "$(get-date): Tasks:"
+          }
           Write-Verbose -Message 'display tasks'
           Write-output "Found scheduled tasks where ""$user"" matched task author or 'run as user'"
           $tasksdata = $tasks | ConvertFrom-Csv | Select-Object Hostname, Taskname, Author, "Run as user"
           $tasksdata
-          $tasksdata | ForEach-Object {Write-Log $_}
+          if ($Log) {
+            $tasksdata | ForEach-Object {Write-Log $_}
+          }
         } else {
-          Write-Log "$(get-date): No tasks on computer ""$item"" for user ""$user"""
+          if ($Log) {
+            Write-Log "$(get-date): No tasks on computer ""$item"" for user ""$user"""
+          }
           Write-output "No tasks foundon computer ""$item"" for user ""$user"""
         }
       }
     }
   } # end PROCESS block
   End {
-    if ($Log) { Write-output "`nLog File: $($Logfile)"}
+    if ($Log) { 
+      Write-output "`nLog File: $($Logfile)"
+    }
     #$ErrorActionPreference = $ErrorActionPreference_
   } # end END block
 } # end Find-TaskServiceUser function
