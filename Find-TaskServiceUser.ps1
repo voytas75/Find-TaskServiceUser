@@ -135,6 +135,8 @@ ICON CREDITS: Module icon made by [Freepik](https://www.freepik.com/) from [Flat
         }
         Write-output "Found scheduled task(s) where ""$user"" matches task author or 'run as user'"
         $tasksdata = $tasks | Select-Object Hostname, Taskname, Author, "Run as user" 
+        # TODO
+        $tasksdata = $tasks | ? {if ($null -eq $_.Hostname) {$_.Hostname = 'xxxx'} } | Select-Object Hostname, Taskname, Author, "Run as user"
         $tasksdata | Format-Table -AutoSize
         if ($Log) {
           $tasksdata | ForEach-Object { Write-Log $_ }
