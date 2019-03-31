@@ -38,9 +38,10 @@ https://www.powershellgallery.com/packages/Find-TaskServiceUser
 VERSIONS:
 version 1.3.0:
 - add module icon (read ICON CREDITS)
+- minor changes
 version 1.2.0, 30.03.2019:
 - improved find of tasks
-- tasks and services results grouped by computer 
+- change in grouping the results of tasks and services 
 - minor changes
 version 1.1.0, 30.03.2019:
 - change private functions names
