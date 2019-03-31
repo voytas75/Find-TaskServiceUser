@@ -19,13 +19,13 @@ A switch to enable logging of output data to a log file. The log file with the p
 .PARAMETER Logfile
 Path with file name where logging output. Default value is [$env:TEMP]\find-taskserviceuser.log. Works only with Log switch.
 .EXAMPLE
-Find-TaskServiceUser -Computer "WSRV00" -User "BobbyK" -Service -Task -Log
+PS> Find-TaskServiceUser -Computer "WSRV00" -User "BobbyK" -Service -Task -Log
 
 Description
 -----------
 Find system services and scheduled tasks on "WSRV00" for user "BobbyK" with logging output to file.
 .EXAMPLE
-"WSRV01","WSRV02" | Find-TaskServiceUser -Service -Task
+PS> "WSRV01","WSRV02" | Find-TaskServiceUser -Service -Task
 
 Description
 -----------
