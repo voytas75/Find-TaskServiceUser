@@ -36,6 +36,9 @@ https://github.com/voytas75/Find-TaskServiceUser
 https://www.powershellgallery.com/packages/Find-TaskServiceUser
 .NOTES
 VERSIONS:
+version 1.3.1, 01.04.2019:
+- minor fix for iconuri
+- minor changes
 version 1.3.0, 01.04.2019:
 - add '-Minimal' parameter for minimalist object as results
 - use 'get-scheduletask' if available function
