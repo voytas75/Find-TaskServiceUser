@@ -36,6 +36,8 @@ https://github.com/voytas75/Find-TaskServiceUser
 https://www.powershellgallery.com/packages/Find-TaskServiceUser
 .NOTES
 VERSIONS:
+version 1.3.0:
+- add module icon (read ICON CREDITS)
 version 1.2.0, 30.03.2019:
 - improved find of tasks
 - tasks and services results grouped by computer 
