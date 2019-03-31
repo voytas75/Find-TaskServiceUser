@@ -35,6 +35,10 @@ Find-TaskServiceUser -Computer "WSRV00" -User "BobbyK" -Service -Task -Log
 
 We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/voytas75/Find-TaskServiceUser/tags). 
 
+## Icon
+
+Module icon made by [Freepik](https://www.freepik.com/) from [Flaticon](https://www.flaticon.com/) is licensed [CC 3.0 BY](http://creativecommons.org/licenses/by/3.0/)
+
 ## Authors
 
 * **Wojciech Napierała** - *Initial work* - [Voytas75](https://github.com/voytas75)
