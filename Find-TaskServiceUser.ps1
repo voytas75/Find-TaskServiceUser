@@ -59,7 +59,7 @@ ICON CREDITS: Module icon made by [Freepik](https://www.freepik.com/) from [Flat
     [Alias('MachineName','Server')]
     [string[]]$Computer=$env:COMPUTERNAME,
 
-    [parameter(Mandatory=$false, HelpMessage='User name to find services and/or tasks.')]
+    [parameter(Mandatory=$false, HelpMessage='User or group name to find scheduled tasks and/or services. Group is used for the security context of the scheduled task only, not system services.')]
     [string]$User='Administrator',
 
     [parameter(Mandatory=$false, HelpMessage='Switch to find system services.')]
