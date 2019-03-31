@@ -36,7 +36,10 @@ https://github.com/voytas75/Find-TaskServiceUser
 https://www.powershellgallery.com/packages/Find-TaskServiceUser
 .NOTES
 VERSIONS:
-version 1.3.0:
+version 1.3.0, 01.04.2019:
+- add '-Minimal' parameter for minimalist object as results
+- use 'get-scheduletask' if available function
+- fix for change in grouping the results of tasks and services
 - add module icon (read ICON CREDITS)
 - minor changes
 version 1.2.0, 30.03.2019:
