@@ -129,12 +129,12 @@ ICON CREDITS: Module icon made by [Freepik](https://www.freepik.com/) from [Flat
       }
       $tasks = Find-TaskUser -server $item.trim() -user $user
       if ($tasks) {
-        Write-Verbose "Scheduled tasks were found"
+        Write-Verbose "Scheduled task(s) were found"
         if ($Log) {
           Write-Log "$(get-date): Scheduled tasks:"
         }
         Write-output "Found scheduled task(s) where ""$user"" matches task author or 'run as user'"
-        $tasksdata = $tasks | Select-Object Hostname, Taskname, Author, "Run as user" , uri
+        $tasksdata = $tasks | Select-Object Hostname, Taskname, Author, "Run as user", URI
         $tasksdata | Format-Table -AutoSize
         if ($Log) {
           $tasksdata | ForEach-Object { Write-Log $_ }
