@@ -134,12 +134,8 @@ ICON CREDITS: Module icon made by [Freepik](https://www.freepik.com/) from [Flat
           Write-Log "$(get-date): Scheduled tasks:"
         }
         Write-output "Found scheduled task(s) where ""$user"" matches task author or 'run as user'"
-        #$tasksdata = $tasks | Select-Object Hostname, Taskname, Author, "Run as user" 
-        # TODO
-        $tasksdata = $tasks | Select-Object Hostname, Taskname, Author, "Run as user"
-        
-        #$tasksdata | Format-Table -AutoSize
-        $tasksdata
+        $tasksdata = $tasks | Select-Object Hostname, Taskname, Author, "Run as user" , uri
+        $tasksdata | Format-Table -AutoSize
         if ($Log) {
           $tasksdata | ForEach-Object { Write-Log $_ }
         }
