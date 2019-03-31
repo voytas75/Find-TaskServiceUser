@@ -1,4 +1,4 @@
-# Find-TaskServiceUser
+# ![](https://github.com/voytas75/Find-TaskServiceUser/blob/v1.3.0-dev/Find-TaskServiceUser.jpg?raw=true) Find-TaskServiceUser
 
 It is a powershell module for finding scheduled tasks and system services on a local or remote computer that are created or run as a given user.
 
