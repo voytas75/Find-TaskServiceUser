@@ -20,15 +20,18 @@ Install-Module -Name Find-TaskServiceUser
 ```powershell
 Find-TaskServiceUser -Computer "WSRV00" -User "BobbyK" -Service -Task -Log
 ```
-
 2. Find system services and scheduled tasks on computers "WSRV01", "WSRV02" for user "Administrator":
 ```powershell
 "WSRV01","WSRV02" | Find-TaskServiceUser -Service -Task
 ```
-
 3. Find system services and scheduled tasks on computers "WSRV01", "WSRV02", "WSRV03" for user "BobbyK":
 ```powershell
-@("WSRV01","WSRV02"), "WSRV03" | Find-TaskServiceUser -Task - User "BobbyK"
+@("WSRV01","WSRV02"), "WSRV03" | Find-TaskServiceUser -Task -User "BobbyK"
+```
+4. Find tasks and services on server "WSRV04" for "SYSTEM" user and return as a minimalistic result in `$object` variable:
+```powershell
+$object = Find-TaskServiceUser -Task -Service -Server "WSRV04" -User "SYSTEM" -Minimal
+$object
 ```
 
 ## Versioning
