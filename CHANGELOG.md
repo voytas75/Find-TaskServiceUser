@@ -6,27 +6,27 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## 1.3.3 - 2019.04.01
 ### Added
-- Description of the '-minimal' parameter
+- Description of the `-Minimal` parameter.
 ## 1.3.2 - 2019.04.01
 ### Changed
-- Minor fix for 'iconuri'
+- Minor fix for `iconuri` in manifest file.
 ## 1.3.1 - 2019.04.01
 ### Changed
-- Minor fix for iconuri
+- Minor fix for `iconuri`.
 ## 1.3.0 - 2019.04.01
 ### Added
-- Add '-Minimal' parameter for minimalist object as results
-- Use 'get-scheduletask' if available function
-- Add module icon (read ICON CREDITS)
+- Add `-Minimal` parameter for minimalist object as results,
+- Use `get-scheduletask` if available function,
+- Add module icon (read ICON CREDITS).
 ### Changed
-- Fix for change in grouping the results of tasks and services
+- Fix for change in grouping the results of tasks and services.
 ## 1.2.0 - 2019.03.30
 ### Changed
-- Improved find of tasks
-- Change in grouping the results of tasks and services 
+- Improved find of scheduled tasks,
+- Change in grouping the results of tasks and services. 
 ## 1.1.0 - 2019.03.30
 ### Changed
-- Change private functions names
+- Change private functions names.
 ## 1.0.1 - 2019.03.29
 ### Changed
 - Minor bug fixes.
