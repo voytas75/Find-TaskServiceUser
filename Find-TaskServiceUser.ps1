@@ -37,32 +37,6 @@ https://github.com/voytas75/Find-TaskServiceUser
 .LINK
 https://www.powershellgallery.com/packages/Find-TaskServiceUser
 .NOTES
-VERSIONS:
-version 1.3.3, 01.04.2019:
-- added a description of the '-minimal' parameter
-- minor fix
-version 1.3.2, 01.04.2019:
-- minor fix for iconuri
-version 1.3.1, 01.04.2019:
-- minor fix for iconuri
-- minor changes
-version 1.3.0, 01.04.2019:
-- add '-Minimal' parameter for minimalist object as results
-- use 'get-scheduletask' if available function
-- fix for change in grouping the results of tasks and services
-- add module icon (read ICON CREDITS)
-- minor changes
-version 1.2.0, 30.03.2019:
-- improved find of tasks
-- change in grouping the results of tasks and services 
-- minor changes
-version 1.1.0, 30.03.2019:
-- change private functions names
-- minor fixes.
-version 1.0.1, 29.03.2019:
-- minor bug fixes.
-version 1.0, 27.03.2019:
-- first build of module created from function.
 ICON CREDITS: Module icon made by [Freepik](https://www.freepik.com/) from [Flaticon](https://www.flaticon.com/) is licensed [CC 3.0 BY](http://creativecommons.org/licenses/by/3.0/)
 
 #>
