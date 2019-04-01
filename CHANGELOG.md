@@ -4,11 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## 1.4.0 - 
+## 1.4.0 - 2019.04.
 ### Added
 - Created release notes file and add `ReleaseNotes` Uri.
 ### Changed
-- `LicenseUri` in manifest module file.
+- `LicenseUri` in manifest module file,
+- The lack of `-Task` and `-Service` parameters does not cause the syntax to be displayed, but only starts searching for tasks and services. `Find-TaskServiceUser` gives the same results as `Find-TaskServiceUser -Task -Service`.
+- No found tasks and services were not correctly interpreted as `0` but as `null`
 ### Removed
 - Release notes from main module file.
 ## 1.3.3 - 2019.04.01
