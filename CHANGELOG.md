@@ -24,7 +24,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Changed
 - Improved find of tasks
 - Change in grouping the results of tasks and services 
-## 1.1.0 - 2019.3.30
+## 1.1.0 - 2019.03.30
 ### Changed
 - Change private functions names
 ## 1.0.1 - 2019.03.29
