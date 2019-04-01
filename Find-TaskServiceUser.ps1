@@ -14,6 +14,8 @@ Computer to find tasks/services. Default value is 'localhost' ($env:COMPUTERNAME
 A Switch to enable finding scheduled tasks.
 .PARAMETER Service
 A Switch to enable finding system services.
+.PARAMETER Minimal
+A switch to enable minimalistic results. Object containing the computer name, number of tasks and/or number of services only. With -Log information about log file path is displayed but log file is not minimal. The return value is en object.
 .PARAMETER Log
 A switch to enable logging of output data to a log file. The log file with the path is defined in the "LogFile" parameter.
 .PARAMETER Logfile
@@ -36,6 +38,9 @@ https://github.com/voytas75/Find-TaskServiceUser
 https://www.powershellgallery.com/packages/Find-TaskServiceUser
 .NOTES
 VERSIONS:
+version 1.3.3, 01.04.2019:
+- added a description of the '-minimal' parameter
+- minor fix
 version 1.3.2, 01.04.2019:
 - minor fix for iconuri
 version 1.3.1, 01.04.2019:
@@ -73,11 +78,11 @@ ICON CREDITS: Module icon made by [Freepik](https://www.freepik.com/) from [Flat
     [parameter(Mandatory=$false, HelpMessage='Switch to find system services.')]
     [switch]$Service,
 
-    [parameter(Mandatory=$false, HelpMessage='Minimalistic results. Object containing the computer name, number of tasks and/or number of services only. with -Log info about log file is displayed but log file is not minimal.')]
-    [switch]$Minimal,
-
     [parameter(Mandatory=$false, HelpMessage='Switch to find scheduled tasks.')]
     [switch]$Task,
+
+    [parameter(Mandatory=$false, HelpMessage='Minimalistic results. Object containing the computer name, number of tasks and/or number of services only. with -Log info about log file is displayed but log file is not minimal.')]
+    [switch]$Minimal,
 
     [parameter(Mandatory=$false, HelpMessage='Switch to enable logging.')]
     [switch]$Log,
