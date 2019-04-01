@@ -28,7 +28,7 @@ Find-TaskServiceUser -Computer "WSRV00" -User "BobbyK" -Service -Task -Log
 ```powershell
 @("WSRV01","WSRV02"), "WSRV03" | Find-TaskServiceUser -Task -User "BobbyK"
 ```
-4. Find tasks and services on server "WSRV04" for "SYSTEM" user and return as a minimalistic result in '<$object>' variable:
+4. Find tasks and services on server "WSRV04" for "SYSTEM" user and return as a minimalistic result in `<$object>` variable:
 ```powershell
 $object = Find-TaskServiceUser -Task -Service -Server "WSRV04" -User "SYSTEM" -Minimal
 $object
