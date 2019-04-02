@@ -8,11 +8,12 @@ Function Find-TaskUser {
     process {
         #23 start
         $server = $server.trim()
+        $user = $user.trim()
         #if ([bool](Get-Command Get-ScheduledTask -ErrorAction SilentlyContinue)) {
         if (Invoke-Command -ComputerName $server -ScriptBlock {[bool](Get-Command Get-ScheduledTask -ErrorAction SilentlyContinue)}) {
             try {
                 Write-Verbose -Message "$server : Try use Get-ScheduledTask"
-                $data = Get-ScheduledTask -CimSession $server -ErrorAction stop | Where-Object {$_.author -match $user.trim() -or $_.Principal.userid -match $user.trim()} | Select-Object hostname, taskname, @{Name="Run As User"; Expression = {$_.Principal.userid}}, Author, URI
+                $data = Get-ScheduledTask -CimSession $server -ErrorAction stop | Where-Object {$_.author -match $user -or $_.Principal.userid -match $user} | Select-Object hostname, taskname, @{Name="Run As User"; Expression = {$_.Principal.userid}}, Author, URI
             } 
             catch {
                 Write-verbose -Message "Get-ScheduledTask error: $_"

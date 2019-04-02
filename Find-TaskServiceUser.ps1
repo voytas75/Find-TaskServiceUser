@@ -95,13 +95,15 @@ ICON CREDITS: Module icon made by [Freepik](https://www.freepik.com/) from [Flat
     }
   } # end BEGIN block
   Process {
+    $user = $user.trim()
     foreach ($item in $Computer) {
-      if ($service) {    
+      $item = $item.trim()
+        if ($service) {    
         if (-not $Minimal) {
-          Write-output "Finding system services with user: ""$($user.trim().toupper())"" on machine: ""$($item.trim().toupper())"""
+          Write-output "Finding system services with user: ""$($user.toupper())"" on machine: ""$($item.toupper())"""
         }
         if ($Log) {
-          Write-Log "$(get-date): Finding services with user: ""$($user.trim().toupper())"" on machine: ""$($item.trim().toupper())"""
+          Write-Log "$(get-date): Finding services with user: ""$($user.toupper())"" on machine: ""$($item.toupper())"""
         }
         $services = Find-ServiceUser -computer $item -user $user
         if ($services) { 
@@ -135,10 +137,10 @@ ICON CREDITS: Module icon made by [Freepik](https://www.freepik.com/) from [Flat
       }
       if ($task) {
         if (!$Minimal) {
-          Write-output "Finding tasks with user: ""$($user.trim().toupper())"" on machine: ""$($item.trim().toupper())"""
+          Write-output "Finding tasks with user: ""$($user.toupper())"" on machine: ""$($item.toupper())"""
         }
         if ($Log) {
-          Write-Log "$(get-date): Finding tasks with user: ""$($user.trim().toupper())"" on machine: ""$($item.trim().toupper())"""
+          Write-Log "$(get-date): Finding tasks with user: ""$($user.toupper())"" on machine: ""$($item.toupper())"""
         }
         $tasks = Find-TaskUser -server $item -user $user
         if ($tasks) {
