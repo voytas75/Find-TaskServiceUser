@@ -103,7 +103,7 @@ ICON CREDITS: Module icon made by [Freepik](https://www.freepik.com/) from [Flat
         if ($Log) {
           Write-Log "$(get-date): Finding services with user: ""$($user.trim().toupper())"" on machine: ""$($item.trim().toupper())"""
         }
-        $services = Find-ServiceUser -computer $item.Trim() -user $user
+        $services = Find-ServiceUser -computer $item -user $user
         if ($services) { 
           # services found
           Write-Verbose "Services result not null"
@@ -140,10 +140,10 @@ ICON CREDITS: Module icon made by [Freepik](https://www.freepik.com/) from [Flat
         if ($Log) {
           Write-Log "$(get-date): Finding tasks with user: ""$($user.trim().toupper())"" on machine: ""$($item.trim().toupper())"""
         }
-        $tasks = Find-TaskUser -server $item.trim() -user $user
+        $tasks = Find-TaskUser -server $item -user $user
         if ($tasks) {
           # tasks found
-          Write-Verbose "Services result not null"
+          Write-Verbose "Task result not null"
           if ($Log) {
             Write-Log "$(get-date): Scheduled tasks:"
           }
