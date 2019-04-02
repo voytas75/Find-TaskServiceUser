@@ -10,10 +10,11 @@ Function Find-TaskUser {
         $server = $server.trim()
         $user = $user.trim()
         #if ([bool](Get-Command Get-ScheduledTask -ErrorAction SilentlyContinue)) {
-        if (Invoke-Command -ComputerName $server -ScriptBlock {[bool](Get-Command Get-ScheduledTask -ErrorAction SilentlyContinue)}) {
+        if ([bool](Invoke-Command -ComputerName $server -EnableNetworkAccess -ScriptBlock {[bool](Get-Command Get-ScheduledTask -ErrorAction SilentlyContinue)} -erroraction silentlycontinue)) {
             try {
                 Write-Verbose -Message "$server : Try use Get-ScheduledTask"
                 $data = Get-ScheduledTask -CimSession $server -ErrorAction stop | Where-Object {$_.author -match $user -or $_.Principal.userid -match $user} | Select-Object hostname, taskname, @{Name="Run As User"; Expression = {$_.Principal.userid}}, Author, URI
+                return $data
             } 
             catch {
                 Write-verbose -Message "Get-ScheduledTask error: $_"
