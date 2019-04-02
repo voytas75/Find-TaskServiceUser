@@ -2,15 +2,17 @@ Function Find-ServiceUser {
   [CmdletBinding()]
   param (
     [parameter(mandatory=$true,position=0)]
-    [string[]]$computer,
+    [string[]]
+    $computer,
 
     [parameter(mandatory=$false,position=1)]
-    [string]$user
+    [string]
+    $user
   )
-  $filter = "startname like '%$($user)%'"
+  $filter = "startname like '%$($user.trim())%'"
   Write-Verbose -Message "WMI query for system services."
   try {
-    $service_ = Get-WmiObject win32_service -filter "$filter" -ComputerName $computer -ErrorAction Stop
+    $service_ = Get-WmiObject win32_service -filter "$filter" -ComputerName $computer.trim() -ErrorAction Stop
   } 
   catch {
     Write-Error -Message "Failed WMI query for system services with Service Logon Account as ""$user"": $_"

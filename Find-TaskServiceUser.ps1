@@ -37,32 +37,6 @@ https://github.com/voytas75/Find-TaskServiceUser
 .LINK
 https://www.powershellgallery.com/packages/Find-TaskServiceUser
 .NOTES
-VERSIONS:
-version 1.3.3, 01.04.2019:
-- added a description of the '-minimal' parameter
-- minor fix
-version 1.3.2, 01.04.2019:
-- minor fix for iconuri
-version 1.3.1, 01.04.2019:
-- minor fix for iconuri
-- minor changes
-version 1.3.0, 01.04.2019:
-- add '-Minimal' parameter for minimalist object as results
-- use 'get-scheduletask' if available function
-- fix for change in grouping the results of tasks and services
-- add module icon (read ICON CREDITS)
-- minor changes
-version 1.2.0, 30.03.2019:
-- improved find of tasks
-- change in grouping the results of tasks and services 
-- minor changes
-version 1.1.0, 30.03.2019:
-- change private functions names
-- minor fixes.
-version 1.0.1, 29.03.2019:
-- minor bug fixes.
-version 1.0, 27.03.2019:
-- first build of module created from function.
 ICON CREDITS: Module icon made by [Freepik](https://www.freepik.com/) from [Flaticon](https://www.flaticon.com/) is licensed [CC 3.0 BY](http://creativecommons.org/licenses/by/3.0/)
 
 #>
@@ -91,24 +65,24 @@ ICON CREDITS: Module icon made by [Freepik](https://www.freepik.com/) from [Flat
     [string]$Logfile="$env:TEMP\Find-TaskServiceUser.log"
   )
   Begin {
-    if (!$service -and !$task) {
-      Write-output "You must provide 'service' or/and 'task' parameter`n"
-      Write-output 'Examples:'
-      Write-output '  Find-TaskServiceUser -Computer "WSRV00" -User "BobbyK" -Service -Task'
-      Write-output '  Find-TaskServiceUser -Computer "WSRV01" -User "BobbyK" -Task -Log' 
-      Write-output '  "WSRV00","WSRV03" | Find-TaskServiceUser -Service -Task'
-      Write-output '  "WSRV04" | Find-TaskServiceUser -Service'
-    } else {
-      if (!$Minimal) {
-        if ($user -eq "administrator") {
-          Write-Output "Set default user: Administrator"
-        }
-        if ($computer -eq $env:COMPUTERNAME) {
-          Write-output "Set default computer: $env:COMPUTERNAME (localhost)"
-        }  
+    if (!$service -and !$task) { 
+      $Service = $Task = $true
+    } 
+#      Write-output "You must provide 'service' or/and 'task' parameter`n"
+#      Write-output 'Examples:'
+#      Write-output '  Find-TaskServiceUser -Computer "WSRV00" -User "BobbyK" -Service -Task'
+#      Write-output '  Find-TaskServiceUser -Computer "WSRV01" -User "BobbyK" -Task -Log' 
+#      Write-output '  "WSRV00","WSRV03" | Find-TaskServiceUser -Service -Task' 
+#      Write-output '  "WSRV04" | Find-TaskServiceUser -Service'
+#      Write-output '  $object = Find-TaskServiceUser -Service -Task -Computer "WSRV04" -User "SYSTEM" -Minimal'
+    if (-not $Minimal) {
+      if ($user -eq "Administrator") {
+        Write-Output "Set default user: Administrator"
       }
-    }
-    if ($Minimal) {
+      if ($computer -eq $env:COMPUTERNAME) {
+        Write-output "Set default computer: $env:COMPUTERNAME (localhost)"
+      }  
+    } else {
       Write-Verbose "Initializing minimalistic results."
       $minimal_obj = @()
       $s=0
@@ -123,14 +97,16 @@ ICON CREDITS: Module icon made by [Freepik](https://www.freepik.com/) from [Flat
   Process {
     foreach ($item in $Computer) {
       if ($service) {    
-        if (!$Minimal) {
+        if (-not $Minimal) {
           Write-output "Finding system services with user: ""$($user.trim().toupper())"" on machine: ""$($item.trim().toupper())"""
         }
         if ($Log) {
           Write-Log "$(get-date): Finding services with user: ""$($user.trim().toupper())"" on machine: ""$($item.trim().toupper())"""
         }
-        $services = Find-ServiceUser -computer $item.Trim() -user $user
-        if ($services) {
+        $services = Find-ServiceUser -computer $item -user $user
+        if ($services) { 
+          # services found
+          Write-Verbose "Services result not null"
           if ($Log) {
             Write-Log "$(get-date): System services:"
           }
@@ -145,6 +121,8 @@ ICON CREDITS: Module icon made by [Freepik](https://www.freepik.com/) from [Flat
             $output1 | ForEach-Object { Write-Log $_ }            
           }
         } else {
+          # services not found
+          Write-Verbose "Services result is null"
           if ($Log) {
             Write-Log "$(get-date): No services found on computer ""$item"" for user ""$user"""
           }
@@ -162,8 +140,10 @@ ICON CREDITS: Module icon made by [Freepik](https://www.freepik.com/) from [Flat
         if ($Log) {
           Write-Log "$(get-date): Finding tasks with user: ""$($user.trim().toupper())"" on machine: ""$($item.trim().toupper())"""
         }
-        $tasks = Find-TaskUser -server $item.trim() -user $user
+        $tasks = Find-TaskUser -server $item -user $user
         if ($tasks) {
+          # tasks found
+          Write-Verbose "Task result not null"
           if ($Log) {
             Write-Log "$(get-date): Scheduled tasks:"
           }
@@ -177,32 +157,33 @@ ICON CREDITS: Module icon made by [Freepik](https://www.freepik.com/) from [Flat
           if ($Log) {
             $tasksdata | ForEach-Object { Write-Log $_ }
           }
+        } else {
+          # tasks not found
+          if ($Log) {
+            Write-Log "$(get-date): No scheduled tasks on computer ""$item"" for user ""$user"""
+          }
+          if ($Minimal) {
+            $tasks_count = $t
           } else {
-            if ($Log) {
-              Write-Log "$(get-date): No scheduled tasks on computer ""$item"" for user ""$user"""
-            }
-            if ($Minimal) {
-              $tasks_count = $t
-            } else {
-              Write-output "No scheduled tasks found on computer ""$item"" for user ""$user"""
-            }
+            Write-output "No scheduled tasks found on computer ""$item"" for user ""$user"""
           }
         }
-        if (!$tasks) {
-          $tasks_count = $null
+      }
+      if (-not $tasks -and (-not $task -and $service)) {
+        $tasks_count = $null
+      }
+      if (-not $services -and (-not $service -and $task)) {
+        $services_count = $null
+      }
+      if ($Minimal) {
+        $minimal_obj += [PSCustomObject]@{
+          ComputerName  = $item
+          Services      = $services_count
+          Tasks         = $tasks_count
         }
-        if (!$services) {
-          $services_count = $null
-        }
-        if ($Minimal) {
-          $minimal_obj += [PSCustomObject]@{
-            ComputerName  = $item
-            Services      = $services_count
-            Tasks         = $tasks_count
-          }
-          $services_count = $s
-          $tasks_count = $t
-        }
+        $services_count = $s
+        $tasks_count = $t
+      }
     } # end foreach
   } # end PROCESS block
   End {
