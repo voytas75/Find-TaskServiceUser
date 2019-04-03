@@ -14,7 +14,7 @@ Copy and Paste the following command to install this package using PowerShellGet
 Install-Module -Name Find-TaskServiceUser
 ```
 
-### Examples:
+### Examples
 
 1. Find system services and scheduled tasks on "WSRV00" for user "BobbyK" with logging output to a file:
 ```powershell
