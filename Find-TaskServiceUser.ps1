@@ -189,10 +189,12 @@ ICON CREDITS: Module icon made by [Freepik](https://www.freepik.com/) from [Flat
     } # end foreach
   } # end PROCESS block
   End {
-    if ($Log -and !$Minimal) { 
+    if ($Log -and -not $Minimal) { 
       Write-output "Log File: $($Logfile)"
-    } else {
+    } elseif($minimal -and $Log) {
       Write-Information -MessageData "Log File: $($Logfile)" -InformationAction Continue
+      return $minimal_obj
+    } elseif ($minimal -and -not $log) {
       return $minimal_obj
     }
   } # end END block
