@@ -59,8 +59,8 @@ ICON CREDITS: Module icon made by [Freepik](https://www.freepik.com/) from [Flat
     [Alias('MachineName','Server')]
     [string[]]$Computer=$env:COMPUTERNAME,
 
-    [parameter(Mandatory=$false, HelpMessage='User or group name to find scheduled tasks and/or services. Group is used for the security context of the scheduled task only, not system services.')]
-    [string]$User='Administrator',
+    [parameter(Mandatory=$false, HelpMessage='User(s) or group name(s) to find scheduled tasks and/or services. Group is used for the security context of the scheduled task only, not system services.')]
+    [string[]]$User='Administrator',
 
     [parameter(Mandatory=$false, HelpMessage='Switch to find system services.')]
     [switch]$Service,
@@ -71,10 +71,10 @@ ICON CREDITS: Module icon made by [Freepik](https://www.freepik.com/) from [Flat
     [parameter(Mandatory=$false, HelpMessage='Minimalistic results. Object containing the computer name, number of tasks and/or number of services only. with -Log info about log file is displayed but log file is not minimal.')]
     [switch]$Minimal,
 
-    [parameter(Mandatory=$false, HelpMessage= "Enable exporting to file.")]
+    [parameter(Mandatory=$false, HelpMessage= 'Enable exporting to file.')]
     [switch]$Export,
 
-    [parameter(Mandatory=$false, HelpMessage= "Enter path to export file.")]
+    [parameter(Mandatory=$false, HelpMessage= 'Enter path to export file.')]
     [string]$Exportpath = [Environment]::GetFolderPath("MyDocuments")+"\Find-TaskServiceUser.XML",
 
     [parameter(Mandatory=$false, HelpMessage='Switch to enable logging.')]
@@ -114,17 +114,18 @@ ICON CREDITS: Module icon made by [Freepik](https://www.freepik.com/) from [Flat
     }
   } # end BEGIN block
   Process {
-    $user = $user.trim()
-    foreach ($item in $Computer) {
+    foreach ($user_item in $User) {
+      $user_item = $user_item.trim()
+      foreach ($item in $Computer) {
       $item = $item.trim()
         if ($service) {    
         if (-not $Minimal) {
-          Write-output "Finding system services with user: ""$($user.toupper())"" on machine: ""$($item.toupper())"""
+          Write-output "Finding system services with user: ""$($user_item.toupper())"" on machine: ""$($item.toupper())"""
         }
         if ($Log) {
-          Write-Log "$(get-date): Finding services with user: ""$($user.toupper())"" on machine: ""$($item.toupper())"""
+          Write-Log "$(get-date): Finding services with user: ""$($user_item.toupper())"" on machine: ""$($item.toupper())"""
         }
-        $services = Find-ServiceUser -computer $item -user $user
+        $services = Find-ServiceUser -computer $item -user $user_item
         if ($services) { 
           # services found
           Write-Verbose "Services result not null"
@@ -135,7 +136,7 @@ ICON CREDITS: Module icon made by [Freepik](https://www.freepik.com/) from [Flat
           if ($Minimal) {
             $services_count = ($services | Measure-Object).count
           } else {
-            Write-output "Found system service(s) where ""$user"" matches 'Service Logon Account'"
+            Write-output "Found system service(s) where ""$user_item"" matches 'Service Logon Account'"
             $output1 | Format-Table -AutoSize
           }
           if ($Log) {
@@ -145,23 +146,23 @@ ICON CREDITS: Module icon made by [Freepik](https://www.freepik.com/) from [Flat
           # services not found
           Write-Verbose "Services result is null"
           if ($Log) {
-            Write-Log "$(get-date): No services found on computer ""$item"" for user ""$user"""
+            Write-Log "$(get-date): No services found on computer ""$item"" for user ""$user_item"""
           }
           if ($Minimal) {
             $services_count = $s
           } else {
-            Write-output "No system services found on computer ""$item"" for user ""$user"""          
+            Write-output "No system services found on computer ""$item"" for user ""$user_item"""          
           }
         }
       }
       if ($task) {
         if (!$Minimal) {
-          Write-output "Finding tasks with user: ""$($user.toupper())"" on machine: ""$($item.toupper())"""
+          Write-output "Finding tasks with user: ""$($user_item.toupper())"" on machine: ""$($item.toupper())"""
         }
         if ($Log) {
-          Write-Log "$(get-date): Finding tasks with user: ""$($user.toupper())"" on machine: ""$($item.toupper())"""
+          Write-Log "$(get-date): Finding tasks with user: ""$($user_item.toupper())"" on machine: ""$($item.toupper())"""
         }
-        $tasks = Find-TaskUser -server $item -user $user
+        $tasks = Find-TaskUser -server $item -user $user_item
         if ($tasks) {
           # tasks found
           Write-Verbose "Task result not null"
@@ -172,7 +173,7 @@ ICON CREDITS: Module icon made by [Freepik](https://www.freepik.com/) from [Flat
           if ($Minimal) {
             $tasks_count = ($tasks | Measure-Object).count
           } else {
-            Write-output "Found scheduled task(s) where ""$user"" matches task author or 'run as user'"
+            Write-output "Found scheduled task(s) where ""$user_item"" matches task author or 'run as user'"
             $tasksdata | Format-Table -AutoSize
           }
           if ($Log) {
@@ -181,12 +182,12 @@ ICON CREDITS: Module icon made by [Freepik](https://www.freepik.com/) from [Flat
         } else {
           # tasks not found
           if ($Log) {
-            Write-Log "$(get-date): No scheduled tasks on computer ""$item"" for user ""$user"""
+            Write-Log "$(get-date): No scheduled tasks on computer ""$item"" for user ""$user_item"""
           }
           if ($Minimal) {
             $tasks_count = $t
           } else {
-            Write-output "No scheduled tasks found on computer ""$item"" for user ""$user"""
+            Write-output "No scheduled tasks found on computer ""$item"" for user ""$user_item"""
           }
         }
       }
@@ -198,19 +199,25 @@ ICON CREDITS: Module icon made by [Freepik](https://www.freepik.com/) from [Flat
       }
       if ($Minimal) {
         $minimal_obj += [PSCustomObject]@{
+          UserName      = $user_item
           ComputerName  = $item
-          Services      = $services_count
-          Tasks         = $tasks_count
+          ServicesCount      = $services_count
+          TasksCount         = $tasks_count
         }
         $services_count = $s
         $tasks_count = $t
       }
       if ($Export) {
         Write-Verbose -Message "Building objects with all results"
-        $tasks_all += $tasks
-        $services_all += $services
+        if ($tasks) {
+          $tasks_all += $tasks 
+        }
+        if ($services) {
+          $services_all += $services
+        }
       }
-    } # end foreach
+    } # end foreach $Computer
+    } # end foreach $User
   } # end PROCESS block
   End {
     if ($Log -and -not $Minimal) { 
@@ -224,7 +231,9 @@ ICON CREDITS: Module icon made by [Freepik](https://www.freepik.com/) from [Flat
     if ($export) {
       Write-Information -MessageData "Export File: $($Exportpath)" -InformationAction Continue
       Write-Information -MessageData "Export File: You can import faile using 'Import-Clixml `"$($Exportpath)`"'" -InformationAction Continue
-      $export_data = @{"Tasks"=$tasks_all;"Services"=$services_all}
+      $task_all_unique = $tasks_all | sort taskname -Unique
+      $services_all_unique = $services_all | sort name -Unique
+      $export_data = @{"Tasks"=$task_all_unique;"Services"=$services_all}
       #Add-Content -LiteralPath $Exportpath -Value $export_data -PassThru
       Export-Clixml -LiteralPath $Exportpath -InputObject $export_data
     }
