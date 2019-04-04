@@ -11,13 +11,17 @@ User name to find scheduled tasks or system services. Default value is 'Administ
 .PARAMETER Computer
 Computer to find tasks/services. Default value is 'localhost' ($env:COMPUTERNAME).
 .PARAMETER Task
-A Switch to enable finding scheduled tasks.
+A Switch to look for scheduled tasks where user name is matched.
 .PARAMETER Service
-A Switch to enable finding system services.
+A Switch to look for system services where user name is matched.
 .PARAMETER Minimal
 A switch to enable minimalistic results. Object containing the computer name, number of tasks and/or number of services only. With -Log information about log file path is displayed but log file is not minimal. The return value is en object.
+.PARAMETER Export
+Enable exporting results objects to file (using "Export-Clixml"). Export file path is defined in "Exportpath" parameter.
+.PARAMETER Exportpath
+File name path to export results finding scheduled tasks and/or system services.
 .PARAMETER Log
-A switch to enable logging of output data to a log file. The log file with the path is defined in the "LogFile" parameter.
+A switch to enable logging of output data to a log file. The log file with the path is defined in "LogFile" parameter.
 .PARAMETER Logfile
 Path with file name where logging output. Default value is [$env:TEMP]\find-taskserviceuser.log. Works only with Log switch.
 .EXAMPLE
@@ -25,13 +29,22 @@ PS> Find-TaskServiceUser -Computer "WSRV00" -User "BobbyK" -Service -Task -Log
 
 Description
 -----------
-Find system services and scheduled tasks on "WSRV00" for user "BobbyK" with logging output to file.
+Find system services and scheduled tasks on "WSRV00" for user name is matched "BobbyK". Logging is enabled.
 .EXAMPLE
 PS> "WSRV01","WSRV02" | Find-TaskServiceUser -Service -Task
 
 Description
 -----------
-Find system services and scheduled tasks on computers "WSRV01", "WSRV02" for user "Administrator"
+Find system services and scheduled tasks on computers "WSRV01", "WSRV02"  where user name is matched "Administrator".
+.EXAMPLE
+PS> "WSRV01","WSRV10" | Find-TaskServiceUser -Service -Task -Export
+PS> $data = Import-Clixml "C:\Users\test_user\Documents\Find-TaskServiceUser.XML"
+PS> $data.Tasks | Format-Table -Autosize
+PS> $data.Services | Format-Table -Autosize
+
+Description
+-----------
+Find system services and scheduled tasks on computers "WSRV01", "WSRV10" where user name is matched "Administrator". Results are exported to XML file and then imported to $data variable. Results are displayed.
 .LINK
 https://github.com/voytas75/Find-TaskServiceUser
 .LINK
@@ -57,6 +70,12 @@ ICON CREDITS: Module icon made by [Freepik](https://www.freepik.com/) from [Flat
 
     [parameter(Mandatory=$false, HelpMessage='Minimalistic results. Object containing the computer name, number of tasks and/or number of services only. with -Log info about log file is displayed but log file is not minimal.')]
     [switch]$Minimal,
+
+    [parameter(Mandatory=$false, HelpMessage= "Enable exporting to file.")]
+    [switch]$Export,
+
+    [parameter(Mandatory=$false, HelpMessage= "Enter path to export file.")]
+    [string]$Exportpath = [Environment]::GetFolderPath("MyDocuments")+"\Find-TaskServiceUser.XML",
 
     [parameter(Mandatory=$false, HelpMessage='Switch to enable logging.')]
     [switch]$Log,
@@ -186,6 +205,11 @@ ICON CREDITS: Module icon made by [Freepik](https://www.freepik.com/) from [Flat
         $services_count = $s
         $tasks_count = $t
       }
+      if ($Export) {
+        Write-Verbose -Message "Building objects with all results"
+        $tasks_all += $tasks
+        $services_all += $services
+      }
     } # end foreach
   } # end PROCESS block
   End {
@@ -193,9 +217,16 @@ ICON CREDITS: Module icon made by [Freepik](https://www.freepik.com/) from [Flat
       Write-output "Log File: $($Logfile)"
     } elseif($minimal -and $Log) {
       Write-Information -MessageData "Log File: $($Logfile)" -InformationAction Continue
-      return $minimal_obj
+      $minimal_obj
     } elseif ($minimal -and -not $log) {
-      return $minimal_obj
+      $minimal_obj
+    }
+    if ($export) {
+      Write-Information -MessageData "Export File: $($Exportpath)" -InformationAction Continue
+      Write-Information -MessageData "Export File: You can import faile using 'Import-Clixml `"$($Exportpath)`"'" -InformationAction Continue
+      $export_data = @{"Tasks"=$tasks_all;"Services"=$services_all}
+      #Add-Content -LiteralPath $Exportpath -Value $export_data -PassThru
+      Export-Clixml -LiteralPath $Exportpath -InputObject $export_data
     }
   } # end END block
 } # end Find-TaskServiceUser function
