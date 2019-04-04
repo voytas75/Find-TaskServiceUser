@@ -120,10 +120,10 @@ ICON CREDITS: Module icon made by [Freepik](https://www.freepik.com/) from [Flat
       $item = $item.trim()
         if ($service) {    
         if (-not $Minimal) {
-          Write-output "Finding system services with user: ""$($user.toupper())"" on machine: ""$($item.toupper())"""
+          Write-output "Finding system services with user: ""$($user_item.toupper())"" on machine: ""$($item.toupper())"""
         }
         if ($Log) {
-          Write-Log "$(get-date): Finding services with user: ""$($user.toupper())"" on machine: ""$($item.toupper())"""
+          Write-Log "$(get-date): Finding services with user: ""$($user_item.toupper())"" on machine: ""$($item.toupper())"""
         }
         $services = Find-ServiceUser -computer $item -user $user_item
         if ($services) { 
