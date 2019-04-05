@@ -27,18 +27,18 @@ try
     $response = Invoke-WebRequest -URI $url | ConvertFrom-Json
     if ([System.Version]$response.name -ge [System.Version]$ModuleVersion)
     {
-       Write-Host "There is a newer version available. Run 'Update-Module -Name Find-TaskServiceUser' to update to the latest version." -ForegroundColor Red
-       Write-Host "Alternatively, you can download it manually from https://github.com/voytas75/Find-TaskServiceUser/releases/latest" -ForegroundColor RED
+       Write-Output "There is a newer version available. Run 'Update-Module -Name Find-TaskServiceUser' to update to the latest version." -ForegroundColor Red
+       Write-Output "Alternatively, you can download it manually from https://github.com/voytas75/Find-TaskServiceUser/releases/latest" -ForegroundColor RED
     }
     else
     {
-       Write-Host "You have the latest version installed!" -ForegroundColor Green
+        Write-Output "You have the latest version installed!" -ForegroundColor Green
     }
 }
 catch
 {
     # Github limits the number of unauthenticated API requests. To avoid this throwing an error we supress it here.
-    Write-Host "Importing Find-TaskServiceUser version $ModuleVersion" -ForegroundColor Red
-    Write-Host "Unable to reach GitHub, please manually verify that you have the latest version by going to https://github.com/voytas75/Find-TaskServiceUser/releases/latest" -ForegroundColor Red
+    Write-Output "Importing Find-TaskServiceUser version $ModuleVersion" -ForegroundColor Red
+    Write-Output "Unable to reach GitHub, please manually verify that you have the latest version by going to https://github.com/voytas75/Find-TaskServiceUser/releases/latest" -ForegroundColor Red
 }
 [Net.ServicePointManager]::SecurityProtocol = $oldProtocol
