@@ -30,6 +30,7 @@ Function Find-TaskUser {
         }
     } else {
         Write-verbose -Message "$server`: test connection failed!"
+        Write-Information -MessageData "$server`: test connection failed!" -InformationAction Continue
         return $null
     }
         #23 end
