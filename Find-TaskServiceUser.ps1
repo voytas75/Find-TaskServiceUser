@@ -37,6 +37,13 @@ Description
 -----------
 Find system services and scheduled tasks on computers "WSRV01", "WSRV02"  where user name is matched "Administrator".
 .EXAMPLE
+PS> $data = Find-TaskServiceUser -Task -Service -Server "WSRV04" -User "SYSTEM" -Minimal
+PS> $data
+
+Description
+-----------
+Find tasks and services on server "WSRV04" for "SYSTEM" user and return a minimalistic result as custom object `$data`.
+.EXAMPLE
 PS> "WSRV01","WSRV10" | Find-TaskServiceUser -Service -Task -Export
 PS> $data = Import-Clixml "C:\Users\test_user\Documents\Find-TaskServiceUser.XML"
 PS> $data.Tasks | Format-Table -Autosize

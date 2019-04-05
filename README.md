@@ -30,7 +30,7 @@ PS> "WSRV01","WSRV02" | Find-TaskServiceUser -Service -Task
 ```powershell
 PS> @("WSRV01","WSRV02"), "WSRV03" | Find-TaskServiceUser -Task -User "BobbyK"
 ```
-1.  Find tasks and services on server "WSRV04" for "SYSTEM" user and return as a minimalistic result in `$data` variable as custom object:
+1.  Find tasks and services on server "WSRV04" for "SYSTEM" user and return a minimalistic result as custom object `$data`:
 ```powershell
 PS> $data = Find-TaskServiceUser -Task -Service -Server "WSRV04" -User "SYSTEM" -Minimal
 PS> $data
