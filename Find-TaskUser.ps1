@@ -12,27 +12,27 @@ Function Find-TaskUser {
         #if ([bool](Get-Command Get-ScheduledTask -ErrorAction SilentlyContinue)) {
         if ([bool](Test-Connection -ComputerName $server -Count 1 -ErrorAction SilentlyContinue)){
             if ([bool](Invoke-Command -ComputerName $server -EnableNetworkAccess -ScriptBlock {[bool](Get-Command Get-ScheduledTask -ErrorAction SilentlyContinue)} -erroraction silentlycontinue)) {
-            try {
-                Write-Verbose -Message "$server : Try use Get-ScheduledTask"
-                $data = Get-ScheduledTask -CimSession $server -ErrorAction stop | Where-Object {$_.author -match $user -or $_.Principal.userid -match $user} | Select-Object hostname, taskname, @{Name="Run As User"; Expression = {$_.Principal.userid}}, Author, URI
-                return $data
-            } 
-            catch {
-                Write-verbose -Message "Get-ScheduledTask error: $_"
-                Write-Verbose -Message "$server : Switching to schtasks command."
+                try {
+                    Write-Verbose -Message "$server : Try use Get-ScheduledTask"
+                    $data = Get-ScheduledTask -CimSession $server -ErrorAction stop | Where-Object {$_.author -match $user -or $_.Principal.userid -match $user} | Select-Object @{Name="Hostname"; Expression = {$_.PSComputerName}}, taskname, @{Name="Run As User"; Expression = {$_.Principal.userid}}, Author, URI
+                    return $data
+                } 
+                catch {
+                    Write-verbose -Message "Get-ScheduledTask error: $_"
+                    Write-Verbose -Message "$server : Switching to schtasks command."
 
+                    Invoke-SCHTasks -server $server -user $user
+
+                }
+            } else {
                 Invoke-SCHTasks -server $server -user $user
 
             }
         } else {
-            Invoke-SCHTasks -server $server -user $user
-
+            Write-verbose -Message "$server`: Connection failed!"
+            Write-Information -MessageData "$server`: Connection failed!" -InformationAction Continue
+            return $null
         }
-    } else {
-        Write-verbose -Message "$server`: Connection failed!"
-        Write-Information -MessageData "$server`: Connection failed!" -InformationAction Continue
-        return $null
-    }
         #23 end
 
 <#

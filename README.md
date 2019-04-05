@@ -20,20 +20,27 @@ Install-Module -Name Find-TaskServiceUser
 
 1.  Find system services and scheduled tasks on "WSRV00" for user "BobbyK" with logging output to a file:
 ```powershell
-Find-TaskServiceUser -Computer "WSRV00" -User "BobbyK" -Service -Task -Log
+PS> Find-TaskServiceUser -Computer "WSRV00" -User "BobbyK" -Service -Task -Log
 ```
 2.  Find system services and scheduled tasks on computers "WSRV01", "WSRV02" for user "Administrator":
 ```powershell
-"WSRV01","WSRV02" | Find-TaskServiceUser -Service -Task
+PS> "WSRV01","WSRV02" | Find-TaskServiceUser -Service -Task
 ```
 3.  Find system services and scheduled tasks on computers "WSRV01", "WSRV02", "WSRV03" for user "BobbyK":
 ```powershell
-@("WSRV01","WSRV02"), "WSRV03" | Find-TaskServiceUser -Task -User "BobbyK"
+PS> @("WSRV01","WSRV02"), "WSRV03" | Find-TaskServiceUser -Task -User "BobbyK"
 ```
-4.  Find tasks and services on server "WSRV04" for "SYSTEM" user and return as a minimalistic result in `$object` variable:
+1.  Find tasks and services on server "WSRV04" for "SYSTEM" user and return as a minimalistic result in `$data` variable as custom object:
 ```powershell
-$object = Find-TaskServiceUser -Task -Service -Server "WSRV04" -User "SYSTEM" -Minimal
-$object
+PS> $data = Find-TaskServiceUser -Task -Service -Server "WSRV04" -User "SYSTEM" -Minimal
+PS> $data
+```
+5.  Find tasks and services on server "WSRV04" for "JohnK" user. Display results and save it as object in XML file. Import object data from XML and display tasks and services separately:
+```powershell
+PS> Find-TaskServiceUser -Task -Service -Server "WSRV04" -User "JohnK" -Export
+PS> $object = Import-Clixml "D:\dane\voytas\Dokumenty\Find-TaskServiceUser.XML"
+PS> $object.Tasks
+PS> $object.Services
 ```
 
 ## Versioning
