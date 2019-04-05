@@ -11,17 +11,18 @@ Function Find-ServiceUser {
   )
   $user = $user.trim()
   $computer=$computer.trim()
-  $filter = "startname like '%$($user)%'"
-  Write-Verbose -Message "WMI query for system services."
-  try {
-    $service_ =  Get-CimInstance -classname win32_service -filter "$filter" -ComputerName $computer -ErrorAction Stop
-  } 
-  catch {
+  if ([bool](Test-Connection -ComputerName $computer -Count 1 -ErrorAction SilentlyContinue)){
+    $filter = "startname like '%$($user)%'"
+    Write-Verbose -Message "WMI query for system services."
+    try {
+      $service_ =  Get-CimInstance -classname win32_service -filter "$filter" -ComputerName $computer -ErrorAction Stop
+    } 
+    catch {
     Write-Error -Message "Failed WMI query for system services with Service Logon Account as ""$user"": $_"
-  }
-  if ($service_) {
-    Write-Verbose -Message "Return WMI query data"
-    return $service_
+    }
+    if ($service_) {
+      Write-Verbose -Message "Return WMI query data"
+      return $service_
     #New-Object -TypeName psobject -Property @{`
     #Server = $service_.Systemname;
     #Servicename = $service_.Name;
@@ -30,5 +31,10 @@ Function Find-ServiceUser {
     #StartUser = $service_.Startname;
     #ServiceState = $service_.state
     #}
-  } # end function Find-ServiceUser
-}
+    } 
+  } else {
+    Write-verbose -Message "$computer`: test connection failed!"
+    Write-Information -MessageData "$computer`: test connection failed!" -InformationAction Continue
+    return $null
+  }
+}# end function Find-ServiceUser

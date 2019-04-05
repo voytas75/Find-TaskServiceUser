@@ -146,12 +146,12 @@ ICON CREDITS: Module icon made by [Freepik](https://www.freepik.com/) from [Flat
         } else {
           # tasks not found
           if ($Log) {
-            Write-Log "$(get-date): No scheduled tasks on computer ""$item"" for user ""$user_item"""
+            Write-Log "$(get-date): No scheduled tasks or no data from ""$item"" for user ""$user_item"""
           }
           if ($Minimal) {
             $tasks_count = $t
           } else {
-            Write-output "No scheduled tasks found on computer ""$item"" for user ""$user_item"""
+            Write-output "No scheduled tasks or no data from ""$item"" for user ""$user_item"""
           }
         }
       }
@@ -184,12 +184,12 @@ ICON CREDITS: Module icon made by [Freepik](https://www.freepik.com/) from [Flat
           # services not found
           Write-Verbose "Services result is null"
           if ($Log) {
-            Write-Log "$(get-date): No services found on computer ""$item"" for user ""$user_item"""
+            Write-Log "$(get-date): No services found or no data from ""$item"" for user ""$user_item"""
           }
           if ($Minimal) {
             $services_count = $s
           } else {
-            Write-output "No system services found on computer ""$item"" for user ""$user_item"""          
+            Write-output "No system services or no data from ""$item"" for user ""$user_item"""          
           }
         }
       }
@@ -218,7 +218,7 @@ ICON CREDITS: Module icon made by [Freepik](https://www.freepik.com/) from [Flat
           $services_all += $services
         }
       }
-    } # end foreach $Computer
+      } # end foreach $Computer
     } # end foreach $User
   } # end PROCESS block
   End {
