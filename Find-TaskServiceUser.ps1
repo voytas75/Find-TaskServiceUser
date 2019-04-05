@@ -118,14 +118,52 @@ ICON CREDITS: Module icon made by [Freepik](https://www.freepik.com/) from [Flat
       $user_item = $user_item.trim()
       foreach ($item in $Computer) {
       $item = $item.trim()
-        if ($service) {    
+      #Tasks
+      if ($task) {
+        if (!$Minimal) {
+          Write-output "Finding tasks with user: ""$($user_item.toupper())"" on machine: ""$($item.toupper())"""
+        }
+        if ($Log) {
+          Write-Log "$(get-date): Finding tasks with user: ""$($user_item.toupper())"" on machine: ""$($item.toupper())"""
+        }
+        $tasks = Find-TaskUser -server $item -user $user_item | Sort-Object taskname
+        if ($tasks) {
+          # tasks found
+          Write-Verbose "Task result not null"
+          if ($Log) {
+            Write-Log "$(get-date): Scheduled tasks:"
+          }
+          $tasksdata = $tasks | Select-Object Hostname, Taskname, Author, "Run as user", URI
+          if ($Minimal) {
+            $tasks_count = ($tasks | Measure-Object).count
+          } else {
+            Write-output "Found scheduled task(s) where ""$user_item"" matches task author or 'run as user'"
+            $tasksdata | Format-Table -AutoSize
+          }
+          if ($Log) {
+            $tasksdata | ForEach-Object { Write-Log $_ }
+          }
+        } else {
+          # tasks not found
+          if ($Log) {
+            Write-Log "$(get-date): No scheduled tasks on computer ""$item"" for user ""$user_item"""
+          }
+          if ($Minimal) {
+            $tasks_count = $t
+          } else {
+            Write-output "No scheduled tasks found on computer ""$item"" for user ""$user_item"""
+          }
+        }
+      }
+      #Services
+      if ($service) {    
         if (-not $Minimal) {
           Write-output "Finding system services with user: ""$($user_item.toupper())"" on machine: ""$($item.toupper())"""
         }
         if ($Log) {
           Write-Log "$(get-date): Finding services with user: ""$($user_item.toupper())"" on machine: ""$($item.toupper())"""
         }
-        $services = Find-ServiceUser -computer $item -user $user_item
+        $services = Find-ServiceUser -computer $item -user $user_item | Sort-Object name
         if ($services) { 
           # services found
           Write-Verbose "Services result not null"
@@ -152,42 +190,6 @@ ICON CREDITS: Module icon made by [Freepik](https://www.freepik.com/) from [Flat
             $services_count = $s
           } else {
             Write-output "No system services found on computer ""$item"" for user ""$user_item"""          
-          }
-        }
-      }
-      if ($task) {
-        if (!$Minimal) {
-          Write-output "Finding tasks with user: ""$($user_item.toupper())"" on machine: ""$($item.toupper())"""
-        }
-        if ($Log) {
-          Write-Log "$(get-date): Finding tasks with user: ""$($user_item.toupper())"" on machine: ""$($item.toupper())"""
-        }
-        $tasks = Find-TaskUser -server $item -user $user_item
-        if ($tasks) {
-          # tasks found
-          Write-Verbose "Task result not null"
-          if ($Log) {
-            Write-Log "$(get-date): Scheduled tasks:"
-          }
-          $tasksdata = $tasks | Select-Object Hostname, Taskname, Author, "Run as user", URI
-          if ($Minimal) {
-            $tasks_count = ($tasks | Measure-Object).count
-          } else {
-            Write-output "Found scheduled task(s) where ""$user_item"" matches task author or 'run as user'"
-            $tasksdata | Format-Table -AutoSize
-          }
-          if ($Log) {
-            $tasksdata | ForEach-Object { Write-Log $_ }
-          }
-        } else {
-          # tasks not found
-          if ($Log) {
-            Write-Log "$(get-date): No scheduled tasks on computer ""$item"" for user ""$user_item"""
-          }
-          if ($Minimal) {
-            $tasks_count = $t
-          } else {
-            Write-output "No scheduled tasks found on computer ""$item"" for user ""$user_item"""
           }
         }
       }
