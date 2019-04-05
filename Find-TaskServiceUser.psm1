@@ -1,4 +1,4 @@
-﻿#Requires -RunAsAdministrator
+﻿
 #Get files.
 $files  = @( Get-ChildItem -Path $PSScriptRoot\*.ps1 -ErrorAction SilentlyContinue )
 
