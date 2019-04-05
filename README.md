@@ -56,8 +56,6 @@ This project is licensed under the MIT License - see the [LICENSE](https://githu
 
 ## Donation
 
-If you want to support my work, I invite you to donation.
-
-[Pay Pal - donate now](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ZQJXFYKHL7JUA&currency_code=PLN&source=url)
+If you want to support my work, I invite you to donation. Choose this link [Pay Pal - donate now](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ZQJXFYKHL7JUA&currency_code=PLN&source=url) or scan QR Code:
 
 [![Donate QR code](https://github.com/voytas75/Find-TaskServiceUser/blob/master/Kod%20QR.png?raw=true)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ZQJXFYKHL7JUA&currency_code=PLN&source=url)
