@@ -33,8 +33,8 @@ Function Find-ServiceUser {
     #}
     } 
   } else {
-    Write-verbose -Message "$computer`: test connection failed!"
-    Write-Information -MessageData "$computer`: test connection failed!" -InformationAction Continue
+    Write-verbose -Message "$computer`: Connection failed!"
+    Write-Information -MessageData "$computer`: Connection failed!" -InformationAction Continue
     return $null
   }
 }# end function Find-ServiceUser
