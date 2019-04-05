@@ -54,7 +54,7 @@ See also the list of [contributors](https://github.com/voytas75/Find-TaskService
 
 This project is licensed under the MIT License - see the [LICENSE](https://github.com/voytas75/Find-TaskServiceUser/blob/master/LICENSE) file for details
 
-## Domation
+## Donation
 
 If you want to support my work, I invite you to donation.
 
