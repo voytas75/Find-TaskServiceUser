@@ -53,3 +53,11 @@ See also the list of [contributors](https://github.com/voytas75/Find-TaskService
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](https://github.com/voytas75/Find-TaskServiceUser/blob/master/LICENSE) file for details
+
+## Domation
+
+If you want to support my work, I invite you to donation.
+
+[Pay Pal - donate now](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ZQJXFYKHL7JUA&currency_code=PLN&source=url)
+
+[![Donate QR code](https://github.com/voytas75/Find-TaskServiceUser/blob/master/Kod%20QR.png?raw=true)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ZQJXFYKHL7JUA&currency_code=PLN&source=url)
