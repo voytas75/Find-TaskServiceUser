@@ -16,7 +16,7 @@ Foreach($import in @($files))
 }
 
 #check update
-New-Variable -Name ModuleVersion -Value "1.5.0" #v1.3.0 only for tests
+New-Variable -Name ModuleVersion -Value "1.5.0"
 
 $url = "https://api.github.com/repos/voytas75/Find-TaskServiceUser/releases/latest"
 $oldProtocol = [Net.ServicePointManager]::SecurityProtocol
