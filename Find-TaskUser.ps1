@@ -6,9 +6,10 @@ Function Find-TaskUser {
         [string]$user
     )
     process {
-        #23 start
         $server = $server.trim()
         $user = $user.trim()
+        <#
+        #23 start
         #if ([bool](Get-Command Get-ScheduledTask -ErrorAction SilentlyContinue)) {
         if ([bool](Test-Connection -ComputerName $server -Count 1 -ErrorAction SilentlyContinue)){
             if ([bool](Invoke-Command -ComputerName $server -EnableNetworkAccess -ScriptBlock {[bool](Get-Command Get-ScheduledTask -ErrorAction SilentlyContinue)} -erroraction silentlycontinue)) {
@@ -34,8 +35,8 @@ Function Find-TaskUser {
             return $null
         }
         #23 end
-
-        #28 start
+#>
+        #26 start
         if ($server -eq $env:COMPUTERNAME -or $server -eq "localhost") {
             #local
             Write-Verbose -Message "$server`: Local computer."
@@ -69,7 +70,7 @@ Function Find-TaskUser {
                 Invoke-SCHTasks -server $server -user $user
             }
         }
-        #28 end
+        #26 end
 
 <#
         if ([bool](Get-Command Get-ScheduledTask -ErrorAction SilentlyContinue)) {
