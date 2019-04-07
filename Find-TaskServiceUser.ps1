@@ -134,7 +134,7 @@ DONATION: If you want to support my work https://www.paypal.com/cgi-bin/webscr?c
           Write-Log "$(get-date): Finding tasks with user: ""$($user_item.toupper())"" on machine: ""$($item.toupper())"""
         }
         $tasks = Find-TaskUser -server $item -user $user_item | Sort-Object taskname
-        $tasks
+        #$tasks
         if ($tasks) {
           # tasks found
           Write-Verbose "Task result not null"
