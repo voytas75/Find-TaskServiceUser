@@ -10,30 +10,43 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Install module
 
-Copy and Paste the following command to install this package using PowerShellGet.
+Copy and Paste the following command to install this package using PowerShellGet:
 
 ```powershell
 Install-Module -Name Find-TaskServiceUser
+```
+
+Command to install in current user's directory, `$home\Documents\PowerShell\Modules`:
+
+```powershell
+Install-Module -Name Find-TaskServiceUser -Scope CurrentUser
 ```
 
 ### Examples
 
 1.  Find system services and scheduled tasks on "WSRV00" for user "BobbyK" with logging output to a file:
 ```powershell
-Find-TaskServiceUser -Computer "WSRV00" -User "BobbyK" -Service -Task -Log
+PS> Find-TaskServiceUser -Computer "WSRV00" -User "BobbyK" -Service -Task -Log
 ```
 2.  Find system services and scheduled tasks on computers "WSRV01", "WSRV02" for user "Administrator":
 ```powershell
-"WSRV01","WSRV02" | Find-TaskServiceUser -Service -Task
+PS> "WSRV01","WSRV02" | Find-TaskServiceUser -Service -Task
 ```
 3.  Find system services and scheduled tasks on computers "WSRV01", "WSRV02", "WSRV03" for user "BobbyK":
 ```powershell
-@("WSRV01","WSRV02"), "WSRV03" | Find-TaskServiceUser -Task -User "BobbyK"
+PS> @("WSRV01","WSRV02"), "WSRV03" | Find-TaskServiceUser -Task -User "BobbyK"
 ```
-4.  Find tasks and services on server "WSRV04" for "SYSTEM" user and return as a minimalistic result in `$object` variable:
+1.  Find tasks and services on server "WSRV04" for "SYSTEM" user and return a minimalistic result as custom object `$data`:
 ```powershell
-$object = Find-TaskServiceUser -Task -Service -Server "WSRV04" -User "SYSTEM" -Minimal
-$object
+PS> $data = Find-TaskServiceUser -Task -Service -Server "WSRV04" -User "SYSTEM" -Minimal
+PS> $data
+```
+5.  Find tasks and services on server "WSRV04" for "JohnK" user. Display results and save it as object in XML file. Import object data from XML and display tasks and services separately:
+```powershell
+PS> Find-TaskServiceUser -Task -Service -Server "WSRV04" -User "JohnK" -Export
+PS> $object = Import-Clixml "D:\dane\voytas\Dokumenty\Find-TaskServiceUser.XML"
+PS> $object.Tasks
+PS> $object.Services
 ```
 
 ## Versioning
@@ -53,3 +66,9 @@ See also the list of [contributors](https://github.com/voytas75/Find-TaskService
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](https://github.com/voytas75/Find-TaskServiceUser/blob/master/LICENSE) file for details
+
+## Donation
+
+If you want to support my work, I invite you to donation. Choose this link [Pay Pal - donate now](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ZQJXFYKHL7JUA&currency_code=PLN&source=url) or scan QR Code:
+
+[![Donate QR code](https://github.com/voytas75/Find-TaskServiceUser/blob/master/Kod%20QR.png?raw=true)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ZQJXFYKHL7JUA&currency_code=PLN&source=url)

@@ -37,6 +37,13 @@ Description
 -----------
 Find system services and scheduled tasks on computers "WSRV01", "WSRV02"  where user name is matched "Administrator".
 .EXAMPLE
+PS> $data = Find-TaskServiceUser -Task -Service -Server "WSRV04" -User "SYSTEM" -Minimal
+PS> $data
+
+Description
+-----------
+Find tasks and services on server "WSRV04" for "SYSTEM" user and return a minimalistic result as custom object `$data`.
+.EXAMPLE
 PS> "WSRV01","WSRV10" | Find-TaskServiceUser -Service -Task -Export
 PS> $data = Import-Clixml "C:\Users\test_user\Documents\Find-TaskServiceUser.XML"
 PS> $data.Tasks | Format-Table -Autosize
@@ -51,7 +58,7 @@ https://github.com/voytas75/Find-TaskServiceUser
 https://www.powershellgallery.com/packages/Find-TaskServiceUser
 .NOTES
 ICON CREDITS: Module icon made by [Freepik](https://www.freepik.com/) from [Flaticon](https://www.flaticon.com/) is licensed [CC 3.0 BY](http://creativecommons.org/licenses/by/3.0/)
-
+DONATION: If you want to support my work https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ZQJXFYKHL7JUA&currency_code=PLN&source=url
 #>
   [CmdletBinding()]
   Param(
@@ -112,111 +119,118 @@ ICON CREDITS: Module icon made by [Freepik](https://www.freepik.com/) from [Flat
     if ($Log) {
       Write-Log "---------$(get-date)---------"
     }
+    $i=1 #write-progress
   } # end BEGIN block
   Process {
     foreach ($user_item in $User) {
       $user_item = $user_item.trim()
+      write-progress -id 1 -activity "Searching user" -status "$user_item" -percentComplete ($i++ / $user.Count * 100)
+      $j=1 #write-progress
       foreach ($item in $Computer) {
-      $item = $item.trim()
+        $item = $item.trim()
+        write-progress -parentId 1 -activity "Searching on server" -status "$item" -percentComplete ($j++ / $Computer.count * 100)
+        #Tasks
+        if ($task) {
+          if (!$Minimal) {
+            Write-output "Finding tasks with user: ""$($user_item.toupper())"" on machine: ""$($item.toupper())"""
+          }
+          if ($Log) {
+            Write-Log "$(get-date): Finding tasks with user: ""$($user_item.toupper())"" on machine: ""$($item.toupper())"""
+          }
+          $tasks = Find-TaskUser -server $item -user $user_item | Sort-Object taskname
+          #$tasks
+          if ($tasks) {
+            # tasks found
+            Write-Verbose "Task result not null"
+            if ($Log) {
+              Write-Log "$(get-date): Scheduled tasks:"
+            }
+            $tasksdata = $tasks | Select-Object Hostname, Taskname, Author, "Run as user", URI
+            if ($Minimal) {
+              $tasks_count = ($tasks | Measure-Object).count
+            } else {
+              Write-output "Found scheduled task(s) where ""$user_item"" matches task author or 'run as user'"
+              $tasksdata | Format-Table -AutoSize
+            }
+            if ($Log) {
+              $tasksdata | ForEach-Object { Write-Log $_ }
+            }
+          } else {
+            # tasks not found
+            if ($Log) {
+              Write-Log "$(get-date): No scheduled tasks or no data from ""$item"" for user ""$user_item"""
+            }
+            if ($Minimal) {
+              $tasks_count = $t
+            } else {
+              Write-output "No scheduled tasks or no data from ""$item"" for user ""$user_item"""
+            }
+          }
+        }
+        #Services
         if ($service) {    
-        if (-not $Minimal) {
-          Write-output "Finding system services with user: ""$($user_item.toupper())"" on machine: ""$($item.toupper())"""
-        }
-        if ($Log) {
-          Write-Log "$(get-date): Finding services with user: ""$($user_item.toupper())"" on machine: ""$($item.toupper())"""
-        }
-        $services = Find-ServiceUser -computer $item -user $user_item
-        if ($services) { 
-          # services found
-          Write-Verbose "Services result not null"
-          if ($Log) {
-            Write-Log "$(get-date): System services:"
+          if (-not $Minimal) {
+            Write-output "Finding system services with user: ""$($user_item.toupper())"" on machine: ""$($item.toupper())"""
           }
-          $output1 = $services | select-object SystemName,Name, StartName,State
-          if ($Minimal) {
-            $services_count = ($services | Measure-Object).count
+          if ($Log) {
+            Write-Log "$(get-date): Finding services with user: ""$($user_item.toupper())"" on machine: ""$($item.toupper())"""
+          }
+          $services = Find-ServiceUser -computer $item -user $user_item | Sort-Object name
+          if ($services) { 
+            # services found
+            Write-Verbose "Services result not null"
+            if ($Log) {
+              Write-Log "$(get-date): System services:"
+            }
+            $output1 = $services | select-object SystemName,Name, StartName,State
+            if ($Minimal) {
+              $services_count = ($services | Measure-Object).count
+            } else {
+              Write-output "Found system service(s) where ""$user_item"" matches 'Service Logon Account'"
+              $output1 | Format-Table -AutoSize
+            }
+            if ($Log) {
+              $output1 | ForEach-Object { Write-Log $_ }            
+            }
           } else {
-            Write-output "Found system service(s) where ""$user_item"" matches 'Service Logon Account'"
-            $output1 | Format-Table -AutoSize
-          }
-          if ($Log) {
-            $output1 | ForEach-Object { Write-Log $_ }            
-          }
-        } else {
-          # services not found
-          Write-Verbose "Services result is null"
-          if ($Log) {
-            Write-Log "$(get-date): No services found on computer ""$item"" for user ""$user_item"""
-          }
-          if ($Minimal) {
-            $services_count = $s
-          } else {
-            Write-output "No system services found on computer ""$item"" for user ""$user_item"""          
+            # services not found
+            Write-Verbose "Services result is null"
+            if ($Log) {
+              Write-Log "$(get-date): No services found or no data from ""$item"" for user ""$user_item"""
+            }
+            if ($Minimal) {
+              $services_count = $s
+            } else {
+              Write-output "No system services or no data from ""$item"" for user ""$user_item"""          
+            }
           }
         }
-      }
-      if ($task) {
-        if (!$Minimal) {
-          Write-output "Finding tasks with user: ""$($user_item.toupper())"" on machine: ""$($item.toupper())"""
+        if (-not $tasks -and (-not $task -and $service)) {
+          $tasks_count = $null
         }
-        if ($Log) {
-          Write-Log "$(get-date): Finding tasks with user: ""$($user_item.toupper())"" on machine: ""$($item.toupper())"""
+        if (-not $services -and (-not $service -and $task)) {
+          $services_count = $null
         }
-        $tasks = Find-TaskUser -server $item -user $user_item
-        if ($tasks) {
-          # tasks found
-          Write-Verbose "Task result not null"
-          if ($Log) {
-            Write-Log "$(get-date): Scheduled tasks:"
+        if ($Minimal) {
+          $minimal_obj += [PSCustomObject]@{
+            UserName      = $user_item
+            ComputerName  = $item
+            ServicesCount = $services_count
+            TasksCount    = $tasks_count
           }
-          $tasksdata = $tasks | Select-Object Hostname, Taskname, Author, "Run as user", URI
-          if ($Minimal) {
-            $tasks_count = ($tasks | Measure-Object).count
-          } else {
-            Write-output "Found scheduled task(s) where ""$user_item"" matches task author or 'run as user'"
-            $tasksdata | Format-Table -AutoSize
+          $services_count = $s
+          $tasks_count = $t
+        }
+        if ($Export) {
+          Write-Verbose -Message "Building objects with all results"
+          if ($tasks) {
+            $tasks_all += $tasks 
           }
-          if ($Log) {
-            $tasksdata | ForEach-Object { Write-Log $_ }
-          }
-        } else {
-          # tasks not found
-          if ($Log) {
-            Write-Log "$(get-date): No scheduled tasks on computer ""$item"" for user ""$user_item"""
-          }
-          if ($Minimal) {
-            $tasks_count = $t
-          } else {
-            Write-output "No scheduled tasks found on computer ""$item"" for user ""$user_item"""
+          if ($services) {
+            $services_all += $services
           }
         }
-      }
-      if (-not $tasks -and (-not $task -and $service)) {
-        $tasks_count = $null
-      }
-      if (-not $services -and (-not $service -and $task)) {
-        $services_count = $null
-      }
-      if ($Minimal) {
-        $minimal_obj += [PSCustomObject]@{
-          UserName      = $user_item
-          ComputerName  = $item
-          ServicesCount      = $services_count
-          TasksCount         = $tasks_count
-        }
-        $services_count = $s
-        $tasks_count = $t
-      }
-      if ($Export) {
-        Write-Verbose -Message "Building objects with all results"
-        if ($tasks) {
-          $tasks_all += $tasks 
-        }
-        if ($services) {
-          $services_all += $services
-        }
-      }
-    } # end foreach $Computer
+      } # end foreach $Computer
     } # end foreach $User
   } # end PROCESS block
   End {
