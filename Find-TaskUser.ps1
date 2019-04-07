@@ -54,20 +54,61 @@ Function Find-TaskUser {
             #remote
             Write-Verbose -Message "$server`: Remote computer."
             try {
+                Write-Verbose -Message "$server`: Test-connection."
                 Test-Connection -ComputerName $server -Count 1 -ErrorAction Stop | Out-Null
             }
             catch {
                 Write-verbose -Message "$server`: Test-Connection error: $_"
+                Write-Information -MessageData "$server Offline?" -InformationAction Continue
                 return $null
             }
             try {
-                Write-Verbose -Message "$server`: Try use Get-ScheduledTask"
-                return Get-ScheduledTask -CimSession $server -ErrorAction stop | Where-Object {$_.author -match $user -or $_.Principal.userid -match $user} | Select-Object @{Name="Hostname"; Expression = {$_.PSComputerName}}, taskname, @{Name="Run As User"; Expression = {$_.Principal.userid}}, Author, URI
+                Write-Verbose -Message "$server`: Try use Get-ScheduledTask."
+                try {
+                    #check if is local get-scheduledtask
+                    Write-Verbose -Message "$server`: Is local command Get-ScheduledTask ?"
+                    Invoke-Command -ScriptBlock {Get-Command Get-ScheduledTask} -ErrorAction Stop
+                }
+                catch {
+                    # no local get-scheduledtask
+                    #check if is remote get-scheduledtask
+                    Write-Verbose -Message "$server`: No local command Get-ScheduledTask."
+                    try {
+                        Write-Verbose -Message "$server`: Is remote command Get-ScheduledTask ?"
+                        Invoke-Command -ComputerName $server -EnableNetworkAccess -ScriptBlock {Get-Command Get-ScheduledTask -ErrorAction SilentlyContinue} -erroraction Stop
+                        try {
+                            Write-Verbose -Message "$server`: Try use remote command Get-ScheduledTask."
+                            $remote_data = Invoke-Command -ComputerName $server -EnableNetworkAccess -ScriptBlock {Get-ScheduledTask -erroraction stop} -erroraction Stop | Where-Object {$_.author -match $user -or $_.Principal.userid -match $user} | Select-Object @{Name="Hostname"; Expression = {$_.PSComputerName}}, taskname, @{Name="Run As User"; Expression = {$_.Principal.userid}}, Author, URI
+                            $remote_data
+                            if ($remote_data) {
+                                Write-Verbose -Message "$server`: return data from remote command Get-ScheduledTask."
+                                return $remote_data
+                            }
+                            else {
+                                Write-Verbose -Message "$server`: NULL."
+                                return $null
+                            }                        
+                        }
+                        catch {
+                            Write-Verbose -Message "$server error useing remote command Get-ScheduledTask: $_"
+                            Write-Verbose -Message "$server`: Switch to SCHTASK."
+                            $remote_schtask_data = Invoke-SCHTasks -server $server -user $user
+                            return $remote_schtask_data
+                        }
+                    }
+                    catch {
+                        Write-Verbose -Message $_
+                        return $null
+                    }
+                }
+                #return Get-ScheduledTask -CimSession $server -ErrorAction stop | Where-Object {$_.author -match $user -or $_.Principal.userid -match $user} | Select-Object @{Name="Hostname"; Expression = {$_.PSComputerName}}, taskname, @{Name="Run As User"; Expression = {$_.Principal.userid}}, Author, URI
             }
             catch {
-                Write-verbose -Message "Get-ScheduledTask error: $_"
-                Write-Verbose -Message "$server`: Switching to schtasks command."
-                Invoke-SCHTasks -server $server -user $user
+                #Write-verbose -Message "Get-ScheduledTask error: $_"
+                #Write-Verbose -Message "$server`: Switching to schtasks command."
+                #Invoke-SCHTasks -server $server -user $user
+                Write-Verbose -Message $_
+                return $null
             }
         }
         #26 end
