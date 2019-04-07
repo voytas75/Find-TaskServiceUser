@@ -10,10 +10,16 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Install module
 
-Copy and Paste the following command to install this package using PowerShellGet.
+Copy and Paste the following command to install this package using PowerShellGet:
 
 ```powershell
 Install-Module -Name Find-TaskServiceUser
+```
+
+Command to install in current user's directory, `$home\Documents\PowerShell\Modules`:
+
+```powershell
+Install-Module -Name Find-TaskServiceUser -Scope CurrentUser
 ```
 
 ### Examples
