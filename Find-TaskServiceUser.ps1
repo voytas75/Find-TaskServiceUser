@@ -120,7 +120,6 @@ DONATION: If you want to support my work https://www.paypal.com/cgi-bin/webscr?c
       Write-Log "---------$(get-date)---------"
     }
     $i=1 #write-progress
-
   } # end BEGIN block
   Process {
     foreach ($user_item in $User) {
@@ -128,8 +127,8 @@ DONATION: If you want to support my work https://www.paypal.com/cgi-bin/webscr?c
       write-progress -id 1 -activity "Searching user" -status "$user_item" -percentComplete ($i++ / $user.Count * 100)
       $j=1 #write-progress
       foreach ($item in $Computer) {
-        write-progress -parentId 1 -activity "Searching on server" -status "$item" -percentComplete ($j++ / $Computer.count * 100)
         $item = $item.trim()
+        write-progress -parentId 1 -activity "Searching on server" -status "$item" -percentComplete ($j++ / $Computer.count * 100)
         #Tasks
         if ($task) {
           if (!$Minimal) {
