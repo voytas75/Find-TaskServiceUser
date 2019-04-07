@@ -72,6 +72,42 @@ Function Find-TaskUser {
         }
         #26 end
 
+        #28 start
+        if ($server -eq $env:COMPUTERNAME -or $server -eq "localhost") {
+            #local
+            Write-Verbose -Message "$server`: Local computer."
+            try {
+                Write-Verbose -Message "$server`: Try use Get-ScheduledTask."
+                #do cimsession on local to have "pscomputername" property
+                return Get-ScheduledTask -CimSession $server -ErrorAction stop | Where-Object {$_.author -match $user -or $_.Principal.userid -match $user} | Select-Object @{Name="Hostname"; Expression = {$_.PSComputerName}}, taskname, @{Name="Run As User"; Expression = {$_.Principal.userid}}, Author, URI
+            }
+            catch {
+                Write-verbose -Message "$server`: Get-ScheduledTask error: $_"
+                Write-Verbose -Message "$server`: Switching to schtasks command."
+                Invoke-SCHTasks -server $server -user $user
+            }   
+        } else {
+            #remote
+            Write-Verbose -Message "$server`: Remote computer."
+            try {
+                Test-Connection -ComputerName $server -Count 1 -ErrorAction Stop | Out-Null
+            }
+            catch {
+                Write-verbose -Message "$server`: Test-Connection error: $_"
+                return $null
+            }
+            try {
+                Write-Verbose -Message "$server`: Try use Get-ScheduledTask"
+                return Get-ScheduledTask -CimSession $server -ErrorAction stop | Where-Object {$_.author -match $user -or $_.Principal.userid -match $user} | Select-Object @{Name="Hostname"; Expression = {$_.PSComputerName}}, taskname, @{Name="Run As User"; Expression = {$_.Principal.userid}}, Author, URI
+            }
+            catch {
+                Write-verbose -Message "Get-ScheduledTask error: $_"
+                Write-Verbose -Message "$server`: Switching to schtasks command."
+                Invoke-SCHTasks -server $server -user $user
+            }
+        }
+        #28 end
+
 <#
         if ([bool](Get-Command Get-ScheduledTask -ErrorAction SilentlyContinue)) {
             Write-Verbose -Message 'Running ''Get-ScheduleTask'''
