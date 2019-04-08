@@ -85,6 +85,12 @@ DONATION: If you want to support my work https://www.paypal.com/cgi-bin/webscr?c
         [parameter(Mandatory = $false, HelpMessage = 'Enter path to export file.')]
         [string]$Exportpath = [Environment]::GetFolderPath("MyDocuments") + "\Find-TaskServiceUser.XML",
 
+        [parameter(Mandatory = $false, HelpMessage = 'Enable exporting to JSON file.')]
+        [switch]$ExportJSON,
+
+        [parameter(Mandatory = $false, HelpMessage = 'Enter path to export JSON file.')]
+        [string]$ExportJSONpath = [Environment]::GetFolderPath("MyDocuments") + "\Find-TaskServiceUser.json",
+
         [parameter(Mandatory = $false, HelpMessage = 'Switch to enable logging.')]
         [switch]$Log,
 
@@ -222,7 +228,7 @@ DONATION: If you want to support my work https://www.paypal.com/cgi-bin/webscr?c
                     $services_count = $s
                     $tasks_count = $t
                 }
-                if ($Export) {
+                if ($Export -or $ExportJSON) {
                     Write-Verbose -Message "Building objects with all results"
                     if ($tasks) {
                         $tasks_all += $tasks 
@@ -253,6 +259,14 @@ DONATION: If you want to support my work https://www.paypal.com/cgi-bin/webscr?c
             $export_data = @{"Tasks" = $task_all_unique; "Services" = $services_all }
             #Add-Content -LiteralPath $Exportpath -Value $export_data -PassThru
             Export-Clixml -LiteralPath $Exportpath -InputObject $export_data
+        }
+        if ($ExportJSON) {
+            Write-Information -MessageData "Export File: $($Exportjsonpath)" -InformationAction Continue
+            Write-Information -MessageData "Export File: You can import file using 'Import-Clixml `"$($Exportjsonpath)`"'" -InformationAction Continue
+            $task_all_unique = $tasks_all | Sort-Object taskname -Unique
+            $services_all_unique = $services_all | Sort-Object name -Unique
+            $export_data = @{"Tasks" = $task_all_unique; "Services" = $services_all }
+            $export_data | ConvertTo-Json | out-file $Exportjsonpath
         }
     } # end END block
 } # end Find-TaskServiceUser function
