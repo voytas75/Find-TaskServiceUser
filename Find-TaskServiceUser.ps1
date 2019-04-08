@@ -244,7 +244,7 @@ DONATION: If you want to support my work https://www.paypal.com/cgi-bin/webscr?c
     }
     if ($export) {
       Write-Information -MessageData "Export File: $($Exportpath)" -InformationAction Continue
-      Write-Information -MessageData "Export File: You can import faile using 'Import-Clixml `"$($Exportpath)`"'" -InformationAction Continue
+      Write-Information -MessageData "Export File: You can import file using 'Import-Clixml `"$($Exportpath)`"'" -InformationAction Continue
       $task_all_unique = $tasks_all | sort taskname -Unique
       $services_all_unique = $services_all | sort name -Unique
       $export_data = @{"Tasks"=$task_all_unique;"Services"=$services_all}
