@@ -69,6 +69,9 @@ DONATION: If you want to support my work https://www.paypal.com/cgi-bin/webscr?c
         [parameter(Mandatory = $false, HelpMessage = 'User(s) or group name(s) to find scheduled tasks and/or services. Group is used for the security context of the scheduled task only, not system services.')]
         [string[]]$User = 'Administrator',
 
+        [parameter(Mandatory = $false, HelpMessage = 'Turns on the search after the exact username.')]
+        [switch]$Strict,
+
         [parameter(Mandatory = $false, HelpMessage = 'Switch to find system services.')]
         [switch]$Service,
 
@@ -138,7 +141,11 @@ DONATION: If you want to support my work https://www.paypal.com/cgi-bin/webscr?c
                     if ($Log) {
                         Write-Log "$(Get-Date): Finding tasks with user: ""$($user_item.toupper())"" on machine: ""$($item.toupper())"""
                     }
-                    $tasks = Find-TaskUser -server $item -user $user_item | Sort-Object taskname
+                    if ($Strict) {
+                        $tasks = Find-TaskUser -server $item -user $user_item -Strict | Sort-Object taskname
+                    } else {
+                        $tasks = Find-TaskUser -server $item -user $user_item | Sort-Object taskname
+                    }
                     #$tasks
                     if ($tasks) {
                         # tasks found
@@ -179,7 +186,11 @@ DONATION: If you want to support my work https://www.paypal.com/cgi-bin/webscr?c
                     if ($Log) {
                         Write-Log "$(Get-Date): Finding services with user: ""$($user_item.toupper())"" on machine: ""$($item.toupper())"""
                     }
-                    $services = Find-ServiceUser -computer $item -user $user_item | Sort-Object name
+                    if ($Strict){
+                        $services = Find-ServiceUser -computer $item -user $user_item -strict | Sort-Object name
+                    } else {
+                        $services = Find-ServiceUser -computer $item -user $user_item | Sort-Object name
+                    }
                     if ($services) { 
                         # services found
                         Write-Verbose "Services result not null"

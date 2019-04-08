@@ -3,7 +3,9 @@ Function Invoke-SCHTasks {
     param(
         [string]$server,
 
-        [string]$user
+        [string]$user,
+
+        [switch]$Strict
     )
     process {
         if (($server -match $env:COMPUTERNAME) -or ($server -eq "localhost")) {
@@ -28,6 +30,9 @@ Function Invoke-SCHTasks {
         } 
         Write-Verbose -Message "$server : Filtering scheduled tasks"
         $header = "HostName", "TaskName", "Next Run Time", "Status", "Logon Mode", "Last Run Time", "Last Result", "Author", "Task To Run", "Start In", "Comment", "Scheduled Task State", "Idle Time", "Power Management", "Run As User", "Delete Task If Not Rescheduled", "Stop Task If Runs X Hours and X Mins", "Schedule", "Schedule Type", "Start Time", "Start Date", "End Date", "Days", "Months", "Repeat: Every", "Repeat: Until: Time", "Repeat: Until: Duration", "Repeat: Stop If Still Running"
+        if ($Strict) {
+            return $tasks | ConvertFrom-Csv -Header $header | Where-Object { $_."Run As User" -eq $user -or $_."Author" -eq $user } | Select-Object hostname, @{Name = "taskname"; Expression = { ($_.TaskName).split("\")[-1] } }, "run as user", author, @{Name = "URI"; Expression = { $_.TaskName } } -Unique
+        }
         return $tasks | ConvertFrom-Csv -Header $header | Where-Object { $_."Run As User" -match $user -or $_."Author" -match $user } | Select-Object hostname, @{Name = "taskname"; Expression = { ($_.TaskName).split("\")[-1] } }, "run as user", author, @{Name = "URI"; Expression = { $_.TaskName } } -Unique
     }
 }

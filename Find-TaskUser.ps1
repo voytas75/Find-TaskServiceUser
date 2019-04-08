@@ -3,7 +3,9 @@ Function Find-TaskUser {
     param(
         [string]$server,
 
-        [string]$user
+        [string]$user,
+
+        [switch]$Strict
     )
     process {
         $server = $server.trim()
@@ -15,12 +17,19 @@ Function Find-TaskUser {
             try {
                 Write-Verbose -Message "$server`: Try use Get-ScheduledTask."
                 #do cimsession on local to have "pscomputername" property
+                if ($Strict) {
+                    return Get-ScheduledTask -CimSession $server -ErrorAction stop | Where-Object { $_.author -eq $user -or $_.Principal.userid -eq $user } | Select-Object @{Name = "Hostname"; Expression = { $_.PSComputerName } }, taskname, @{Name = "Run As User"; Expression = { $_.Principal.userid } }, Author, URI
+                }
                 return Get-ScheduledTask -CimSession $server -ErrorAction stop | Where-Object { $_.author -match $user -or $_.Principal.userid -match $user } | Select-Object @{Name = "Hostname"; Expression = { $_.PSComputerName } }, taskname, @{Name = "Run As User"; Expression = { $_.Principal.userid } }, Author, URI
             }
             catch {
                 Write-Verbose -Message "$server`: Get-ScheduledTask error: $_"
                 Write-Verbose -Message "$server`: Switching to schtasks command."
-                Invoke-SCHTasks -server $server -user $user
+                if ($Strict) {
+                    Invoke-SCHTasks -server $server -user $user -Strict
+                } else {
+                    Invoke-SCHTasks -server $server -user $user
+                }
             }   
         }
         else {
@@ -51,7 +60,11 @@ Function Find-TaskUser {
                         Invoke-Command -ComputerName $server -EnableNetworkAccess -ScriptBlock { Get-Command Get-ScheduledTask -ErrorAction stop } -ErrorAction stop | Out-Null
                         try {
                             Write-Verbose -Message "$server`: Try use remote command Get-ScheduledTask."
-                            $remote_data = Invoke-Command -ComputerName $server -EnableNetworkAccess -ScriptBlock { Get-ScheduledTask -erroraction stop } -erroraction stop | Where-Object { $_.author -match $user -or $_.Principal.userid -match $user } | Select-Object @{Name = "Hostname"; Expression = { $_.PSComputerName } }, taskname, @{Name = "Run As User"; Expression = { $_.Principal.userid } }, Author, URI
+                            if ($Strict) {
+                                $remote_data = Invoke-Command -ComputerName $server -EnableNetworkAccess -ScriptBlock { Get-ScheduledTask -erroraction stop } -erroraction stop | Where-Object { $_.author -eq $user -or $_.Principal.userid -eq $user } | Select-Object @{Name = "Hostname"; Expression = { $_.PSComputerName } }, taskname, @{Name = "Run As User"; Expression = { $_.Principal.userid } }, Author, URI
+                            } else {
+                                $remote_data = Invoke-Command -ComputerName $server -EnableNetworkAccess -ScriptBlock { Get-ScheduledTask -erroraction stop } -erroraction stop | Where-Object { $_.author -match $user -or $_.Principal.userid -match $user } | Select-Object @{Name = "Hostname"; Expression = { $_.PSComputerName } }, taskname, @{Name = "Run As User"; Expression = { $_.Principal.userid } }, Author, URI
+                            }
                             #$remote_data
                             if ($remote_data) {
                                 Write-Verbose -Message "$server`: return data from remote command Get-ScheduledTask."
@@ -65,7 +78,11 @@ Function Find-TaskUser {
                         catch {
                             Write-Verbose -Message "$server`: Error useing remote command Get-ScheduledTask: $_"
                             Write-Verbose -Message "$server`: Switch to SCHTASK."
-                            $remote_schtask_data = Invoke-SCHTasks -server $server -user $user
+                            if ($Strict) {
+                                $remote_schtask_data = Invoke-SCHTasks -server $server -user $user -Strict
+                            } else {
+                                $remote_schtask_data = Invoke-SCHTasks -server $server -user $user
+                            }
                             return $remote_schtask_data
                         }
                     }

@@ -7,12 +7,21 @@ Function Find-ServiceUser {
 
         [parameter(mandatory = $false, position = 1)]
         [string]
-        $user
+        $user,
+
+        [parameter(Mandatory = $false, HelpMessage = 'Turns on the search after the exact username.')]
+        [switch]
+        $Strict
     )
     $user = $user.trim()
     $computer = $computer.trim()
     if ([bool](Test-Connection -ComputerName $computer -Count 1 -ErrorAction SilentlyContinue)) {
-        $filter = "startname like '%$($user)%'"
+        if ($Strict) {
+            $filter = "startname = '$($user)'"
+            #Write-Information $filter -InformationAction Continue
+        } else {
+            $filter = "startname LIKE '%$($user)%'"
+        }
         Write-Verbose -Message "WMI query for system services."
         try {
             $service_ = Get-CimInstance -classname win32_service -filter "$filter" -ComputerName $computer -ErrorAction Stop
