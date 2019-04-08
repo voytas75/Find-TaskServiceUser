@@ -252,8 +252,8 @@ DONATION: If you want to support my work https://www.paypal.com/cgi-bin/webscr?c
             $minimal_obj
         }
         if ($export) {
-            Write-Information -MessageData "Export File: $($Exportpath)" -InformationAction Continue
-            Write-Information -MessageData "Export File: You can import file using 'Import-Clixml `"$($Exportpath)`"'" -InformationAction Continue
+            Write-Information -MessageData "Export XML File: $($Exportpath)" -InformationAction Continue
+            Write-Information -MessageData "Export XML File: You can import file using 'Import-Clixml `"$($Exportpath)`"'" -InformationAction Continue
             $task_all_unique = $tasks_all | Sort-Object taskname -Unique
             $services_all_unique = $services_all | Sort-Object name -Unique
             $export_data = @{"Tasks" = $task_all_unique; "Services" = $services_all }
@@ -261,8 +261,8 @@ DONATION: If you want to support my work https://www.paypal.com/cgi-bin/webscr?c
             Export-Clixml -LiteralPath $Exportpath -InputObject $export_data
         }
         if ($ExportJSON) {
-            Write-Information -MessageData "Export File: $($Exportjsonpath)" -InformationAction Continue
-            Write-Information -MessageData "Export File: You can import file using 'Import-Clixml `"$($Exportjsonpath)`"'" -InformationAction Continue
+            Write-Information -MessageData "Export JSON File: $($Exportjsonpath)" -InformationAction Continue
+            Write-Information -MessageData "Export JSON File: You can import file using '`$json_data = Get-Content -Raw -Path `"$($Exportjsonpath)`" | ConvertFrom-Json'" -InformationAction Continue
             $task_all_unique = $tasks_all | Sort-Object taskname -Unique
             $services_all_unique = $services_all | Sort-Object name -Unique
             $export_data = @{"Tasks" = $task_all_unique; "Services" = $services_all }
