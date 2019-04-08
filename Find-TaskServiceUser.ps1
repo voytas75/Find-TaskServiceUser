@@ -94,13 +94,6 @@ DONATION: If you want to support my work https://www.paypal.com/cgi-bin/webscr?c
         if (!$service -and !$task) { 
             $Service = $Task = $true
         } 
-        #      Write-output "You must provide 'service' or/and 'task' parameter`n"
-        #      Write-output 'Examples:'
-        #      Write-output '  Find-TaskServiceUser -Computer "WSRV00" -User "BobbyK" -Service -Task'
-        #      Write-output '  Find-TaskServiceUser -Computer "WSRV01" -User "BobbyK" -Task -Log' 
-        #      Write-output '  "WSRV00","WSRV03" | Find-TaskServiceUser -Service -Task' 
-        #      Write-output '  "WSRV04" | Find-TaskServiceUser -Service'
-        #      Write-output '  $object = Find-TaskServiceUser -Service -Task -Computer "WSRV04" -User "SYSTEM" -Minimal'
         if (-not $Minimal) {
             if ($user -eq "Administrator") {
                 Write-Output "Set default user: Administrator"

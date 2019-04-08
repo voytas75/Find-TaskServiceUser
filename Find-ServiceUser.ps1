@@ -23,14 +23,6 @@ Function Find-ServiceUser {
         if ($service_) {
             Write-Verbose -Message "Return WMI query data"
             return $service_
-            #New-Object -TypeName psobject -Property @{`
-            #Server = $service_.Systemname;
-            #Servicename = $service_.Name;
-            #ServicePath =  $service_.Pathname;
-            #ServiceDisplayName = $service_.Displayname;
-            #StartUser = $service_.Startname;
-            #ServiceState = $service_.state
-            #}
         } 
     }
     else {
