@@ -43,14 +43,15 @@ Function Find-TaskUser {
             try {
                 Write-Verbose -Message "$server`: Try use Get-ScheduledTask."
                 #do cimsession on local to have "pscomputername" property
-                return Get-ScheduledTask -CimSession $server -ErrorAction stop | Where-Object {$_.author -match $user -or $_.Principal.userid -match $user} | Select-Object @{Name="Hostname"; Expression = {$_.PSComputerName}}, taskname, @{Name="Run As User"; Expression = {$_.Principal.userid}}, Author, URI
+                return Get-ScheduledTask -CimSession $server -ErrorAction stop | Where-Object { $_.author -match $user -or $_.Principal.userid -match $user } | Select-Object @{Name = "Hostname"; Expression = { $_.PSComputerName } }, taskname, @{Name = "Run As User"; Expression = { $_.Principal.userid } }, Author, URI
             }
             catch {
-                Write-verbose -Message "$server`: Get-ScheduledTask error: $_"
+                Write-Verbose -Message "$server`: Get-ScheduledTask error: $_"
                 Write-Verbose -Message "$server`: Switching to schtasks command."
                 Invoke-SCHTasks -server $server -user $user
             }   
-        } else {
+        }
+        else {
             #remote
             Write-Verbose -Message "$server`: Remote computer."
             try {
@@ -58,7 +59,7 @@ Function Find-TaskUser {
                 Test-Connection -ComputerName $server -Count 1 -ErrorAction Stop | Out-Null
             }
             catch {
-                Write-verbose -Message "$server`: Test-Connection error: $_"
+                Write-Verbose -Message "$server`: Test-Connection error: $_"
                 Write-Information -MessageData "$server Offline?" -InformationAction Continue
                 return $null
             }
@@ -67,7 +68,7 @@ Function Find-TaskUser {
                 try {
                     #check if is local get-scheduledtask
                     Write-Verbose -Message "$server`: Is local command Get-ScheduledTask ?"
-                    Invoke-Command -ScriptBlock {Get-Command Get-ScheduledTask -ErrorAction Stop} -ErrorAction stop | Out-Null
+                    Invoke-Command -ScriptBlock { Get-Command Get-ScheduledTask -ErrorAction Stop } -ErrorAction stop | Out-Null
                 }
                 catch {
                     # no local get-scheduledtask
@@ -75,10 +76,10 @@ Function Find-TaskUser {
                     Write-Verbose -Message "$server`: No local command Get-ScheduledTask."
                     try {
                         Write-Verbose -Message "$server`: Is remote command Get-ScheduledTask ?"
-                        Invoke-Command -ComputerName $server -EnableNetworkAccess -ScriptBlock {Get-Command Get-ScheduledTask -ErrorAction stop} -ErrorAction stop | Out-Null
+                        Invoke-Command -ComputerName $server -EnableNetworkAccess -ScriptBlock { Get-Command Get-ScheduledTask -ErrorAction stop } -ErrorAction stop | Out-Null
                         try {
                             Write-Verbose -Message "$server`: Try use remote command Get-ScheduledTask."
-                            $remote_data = Invoke-Command -ComputerName $server -EnableNetworkAccess -ScriptBlock {Get-ScheduledTask -erroraction stop} -erroraction stop | Where-Object {$_.author -match $user -or $_.Principal.userid -match $user} | Select-Object @{Name="Hostname"; Expression = {$_.PSComputerName}}, taskname, @{Name="Run As User"; Expression = {$_.Principal.userid}}, Author, URI
+                            $remote_data = Invoke-Command -ComputerName $server -EnableNetworkAccess -ScriptBlock { Get-ScheduledTask -erroraction stop } -erroraction stop | Where-Object { $_.author -match $user -or $_.Principal.userid -match $user } | Select-Object @{Name = "Hostname"; Expression = { $_.PSComputerName } }, taskname, @{Name = "Run As User"; Expression = { $_.Principal.userid } }, Author, URI
                             #$remote_data
                             if ($remote_data) {
                                 Write-Verbose -Message "$server`: return data from remote command Get-ScheduledTask."
@@ -114,7 +115,7 @@ Function Find-TaskUser {
         #26 end
 
 
-<#
+        <#
         if ([bool](Get-Command Get-ScheduledTask -ErrorAction SilentlyContinue)) {
             Write-Verbose -Message 'Running ''Get-ScheduleTask'''
             $data = Get-ScheduledTask -CimSession $server.trim() | Where-Object {$_.author -match $user.trim() -or $_.Principal.userid -match $user.trim()} | Select-Object hostname, taskname, @{Name="Run As User"; Expression = {$_.Principal.userid}}, Author, URI
