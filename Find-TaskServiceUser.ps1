@@ -17,7 +17,7 @@ A Switch to look for system services where user name is matched.
 .PARAMETER Minimal
 A switch to enable minimalistic results. Object containing the computer name, number of tasks and/or number of services only. With -Log information about log file path is displayed but log file is not minimal. The return value is en object.
 .PARAMETER Export
-Enable exporting results objects to file (using "Export-Clixml"). Export file path is defined in "Exportpath" parameter.
+Enable exporting results objectsr to file (using "Export-Clixml"). Export file path is defined in "Exportpath" parameter.
 .PARAMETER Exportpath
 File name path to export results finding scheduled tasks and/or system services.
 .PARAMETER Log
