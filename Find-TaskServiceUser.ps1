@@ -76,6 +76,7 @@ DONATION: If you want to support my work https://www.paypal.com/cgi-bin/webscr?c
         [switch]$Task,
 
         [parameter(Mandatory = $false, HelpMessage = 'Minimalistic results. Object containing the computer name, number of tasks and/or number of services only. with -Log info about log file is displayed but log file is not minimal.')]
+        [Alias('Count','CountOnly')]
         [switch]$Minimal,
 
         [parameter(Mandatory = $false, HelpMessage = 'Enable exporting to file.')]
