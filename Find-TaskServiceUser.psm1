@@ -13,7 +13,7 @@ Foreach($import in @($files))
     }
 }
 #check update
-New-Variable -Name ModuleVersion -Value "1.5.2"
+New-Variable -Name ModuleVersion -Value "1.5.3"
 $url = "https://api.github.com/repos/voytas75/Find-TaskServiceUser/releases/latest"
 $oldProtocol = [Net.ServicePointManager]::SecurityProtocol
 # We switch to using TLS 1.2 because GitHub closes the connection if it uses 1.0 or 1.1
