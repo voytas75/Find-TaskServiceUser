@@ -28,7 +28,7 @@ try
     }
     else
     {
-        Write-Information "You have the latest version installed!" -InformationAction Continue
+        Write-Information "You have the latest version ($ModuleVersion) installed." -InformationAction Continue
     }
 }
 catch
