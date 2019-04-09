@@ -13,7 +13,7 @@ Foreach($import in @($files))
     }
 }
 #check update
-New-Variable -Name ModuleVersion -Value "1.5.2"
+New-Variable -Name ModuleVersion -Value "1.5.3"
 $url = "https://api.github.com/repos/voytas75/Find-TaskServiceUser/releases/latest"
 $oldProtocol = [Net.ServicePointManager]::SecurityProtocol
 # We switch to using TLS 1.2 because GitHub closes the connection if it uses 1.0 or 1.1
@@ -21,14 +21,14 @@ $oldProtocol = [Net.ServicePointManager]::SecurityProtocol
 try
 {
     $response = Invoke-WebRequest -URI $url | ConvertFrom-Json
-    if ([System.Version]$response.name -ge [System.Version]$ModuleVersion)
+    if ([System.Version]$response.name -gt [System.Version]$ModuleVersion)
     {
        Write-Information "There is a newer version available. Run 'Update-Module -Name Find-TaskServiceUser' to update to the latest version." -InformationAction Continue
        Write-Information "Alternatively, you can download it manually from https://github.com/voytas75/Find-TaskServiceUser/releases/latest" -InformationAction Continue
     }
     else
     {
-        Write-Information "You have the latest version installed!" -InformationAction Continue
+        Write-Information "You have the latest version ($ModuleVersion) installed." -InformationAction Continue
     }
 }
 catch
