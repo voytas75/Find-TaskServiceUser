@@ -12,7 +12,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Export results to JSON file, parameter `ExportJSON` and `ExportJSONpath`,
 - Search for the exact user name, parameter `Strict`.
 
-- Clearing and formatting the code
+### Changed
+
+- Clearing and formatting the code,
+- Minor changes.
 
 ## 1.5.3 - 2019.04.09
 
