@@ -10,6 +10,24 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Changed
 
+## 1.5.3 - 2019.04.09
+
+### Changed
+
+- A patch to compare the version number in module root file.
+
+## 1.5.2 - 2019.04.09
+
+### Changed
+
+- Fix for not displaying information when importing the module.
+
+## 1.5.1 - 2019.04.09
+
+### Changed
+
+- Fix for scenario when there is no local and remote `get-scheduledtask`, added `invoke-SCHTasks`.
+
 ## 1.5.0 - 2019.04.07
 
 ### Added
