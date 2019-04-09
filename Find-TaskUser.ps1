@@ -97,8 +97,14 @@ Function Find-TaskUser {
                         }
                     }
                     catch {
-                        Write-Verbose -Message $_
-                        return $null
+                        Write-Verbose -Message "$server`: No remote command Get-ScheduledTask: $_"
+                        Write-Verbose -Message "$server`: Switch to SCHTASK."
+                        if ($Strict) {
+                            $remote_schtask_data = Invoke-SCHTasks -server $server -user $user -Strict
+                        } else {
+                            $remote_schtask_data = Invoke-SCHTasks -server $server -user $user
+                        }
+                        return $remote_schtask_data
                     }
                 }
                 #return Get-ScheduledTask -CimSession $server -ErrorAction stop | Where-Object {$_.author -match $user -or $_.Principal.userid -match $user} | Select-Object @{Name="Hostname"; Expression = {$_.PSComputerName}}, taskname, @{Name="Run As User"; Expression = {$_.Principal.userid}}, Author, URI
