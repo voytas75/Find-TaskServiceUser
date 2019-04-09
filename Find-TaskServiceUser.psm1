@@ -21,7 +21,7 @@ $oldProtocol = [Net.ServicePointManager]::SecurityProtocol
 try
 {
     $response = Invoke-WebRequest -URI $url | ConvertFrom-Json
-    if ([System.Version]$response.name -ge [System.Version]$ModuleVersion)
+    if ([System.Version]$response.name -gt [System.Version]$ModuleVersion)
     {
        Write-Information "There is a newer version available. Run 'Update-Module -Name Find-TaskServiceUser' to update to the latest version." -InformationAction Continue
        Write-Information "Alternatively, you can download it manually from https://github.com/voytas75/Find-TaskServiceUser/releases/latest" -InformationAction Continue
