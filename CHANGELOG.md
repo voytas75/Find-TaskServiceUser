@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.6.0 - 2019.04.09
+
+### Added
+
+- Aliases `Count`, `CountOnly` for parameter `Minimal`,
+- Export results to JSON file, parameter `ExportJSON` and `ExportJSONpath`,
+- Search for the exact user name, parameter `Strict`.
+
+### Changed
+
+- Clearing and formatting the code,
+- Minor changes.
+
 ## 1.5.3 - 2019.04.09
 
 ### Changed
