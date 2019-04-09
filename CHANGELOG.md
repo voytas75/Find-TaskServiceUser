@@ -8,7 +8,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Added
 
-### Changed
+- Aliases `Count`, `CountOnly` for parameter `Minimal`,
+- Export results to JSON file, parameter `ExportJSON` and `ExportJSONpath`,
+- Search for the exact user name, parameter `Strict`.
+
+- Clearing and formatting the code
 
 ## 1.5.3 - 2019.04.09
 
