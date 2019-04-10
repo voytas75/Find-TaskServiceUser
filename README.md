@@ -24,32 +24,42 @@ Install-Module -Name Find-TaskServiceUser -Scope CurrentUser
 
 ### Examples
 
-* Find system services and scheduled tasks on "WSRV00" for user "BobbyK" with logging output to a file:
+#### Example 1
+
+Find system services and scheduled tasks on "WSRV00" for user "BobbyK" with logging output to a file:
 
 ```powershell
 PS> Find-TaskServiceUser -Computer "WSRV00" -User "BobbyK" -Service -Task -Log
 ```
 
-* Find system services and scheduled tasks on computers "WSRV01", "WSRV02" for user "Administrator":
+#### Example 2
+
+Find system services and scheduled tasks on computers "WSRV01", "WSRV02" for user "Administrator":
 
 ```powershell
 PS> "WSRV01","WSRV02" | Find-TaskServiceUser -Service -Task
 ```
 
-* Find system services and scheduled tasks on computers "WSRV01", "WSRV02", "WSRV03" for user "BobbyK":
+#### Example 3
+
+Find system services and scheduled tasks on computers "WSRV01", "WSRV02", "WSRV03" for user "BobbyK":
 
 ```powershell
 PS> @("WSRV01","WSRV02"), "WSRV03" | Find-TaskServiceUser -Task -User "BobbyK"
 ```
 
-* Find tasks and services on server "WSRV04" for "SYSTEM" user and return a minimalistic result as custom object `$data`:
+#### Example 4
+
+Find tasks and services on server "WSRV04" for "SYSTEM" user and return a minimalistic result as custom object `$data`:
 
 ```powershell
 PS> $data = Find-TaskServiceUser -Task -Service -Server "WSRV04" -User "SYSTEM" -Minimal
 PS> $data
 ```
 
-* Find tasks and services on server "WSRV04" for "JohnK" user. Display results and save it as object in XML file. Import object data from XML and display tasks and services separately:
+#### Example 5
+
+Find tasks and services on server "WSRV04" for "JohnK" user. Display results and save it as object in XML file. Import object data from XML and display tasks and services separately:
 
 ```powershell
 PS> Find-TaskServiceUser -Task -Service -Server "WSRV04" -User "JohnK" -Export
@@ -68,7 +78,7 @@ Module icon made by [Freepik](https://www.freepik.com/) from [Flaticon](https://
 
 ## Authors
 
-* **Wojciech Napierała** - *Initial work* - [Voytas75](https://github.com/voytas75)
+**Wojciech Napierała** - *Initial work* - [Voytas75](https://github.com/voytas75)
 
 See also the list of [contributors](https://github.com/voytas75/Find-TaskServiceUser/graphs/contributors) who participated in this project.
 
