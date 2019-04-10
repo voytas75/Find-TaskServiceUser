@@ -68,7 +68,7 @@ Module icon made by [Freepik](https://www.freepik.com/) from [Flaticon](https://
 
 ## Authors
 
-*  **Wojciech Napierała** - *Initial work* - [Voytas75](https://github.com/voytas75)
+* **Wojciech Napierała** - *Initial work* - [Voytas75](https://github.com/voytas75)
 
 See also the list of [contributors](https://github.com/voytas75/Find-TaskServiceUser/graphs/contributors) who participated in this project.
 
