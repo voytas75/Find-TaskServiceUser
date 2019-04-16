@@ -24,6 +24,8 @@ File name path to export results finding scheduled tasks and/or system services.
 A switch to enable logging of output data to a log file. The log file with the path is defined in "LogFile" parameter.
 .PARAMETER Logfile
 Path with file name where logging output. Default value is [$env:TEMP]\find-taskserviceuser.log. Works only with Log switch.
+.PARAMETER OpenProjectSite
+The switch opens the project web page on GitHub and ends the script operation.
 .EXAMPLE
 PS> Find-TaskServiceUser -Computer "WSRV00" -User "BobbyK" -Service -Task -Log
 
@@ -98,9 +100,16 @@ DONATION: If you want to support my work https://www.paypal.com/cgi-bin/webscr?c
         [switch]$Log,
 
         [parameter(Mandatory = $false, HelpMessage = 'Log file path. Default is ''[$env:TEMP]\Find-TaskServiceUser.log''.')]
-        [string]$Logfile = "$env:TEMP\Find-TaskServiceUser.log"
+        [string]$Logfile = "$env:TEMP\Find-TaskServiceUser.log",
+
+        [parameter(Mandatory = $false, HelpMessage = 'Opens the project page on GitHub.')]
+        [Switch]$OpenProjectSite
     )
     Begin {
+        if ($OpenProjectSite) {
+            Start-Process 'https://github.com/voytas75/Find-TaskServiceUser'
+            return
+        }
         if (!$service -and !$task) { 
             $Service = $Task = $true
         } 
