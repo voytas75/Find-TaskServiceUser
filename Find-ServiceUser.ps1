@@ -15,7 +15,7 @@ Function Find-ServiceUser {
     )
     $user = $user.trim()
     $computer = $computer.trim()
-    if ([bool](Test-Connection -ComputerName $computer -Count 1 -ErrorAction SilentlyContinue)) {
+    if (Test-Connection -ComputerName $computer -Count 1 -Quiet -ErrorAction SilentlyContinue) {
         if ($Strict) {
             $filter = "startname = '$($user)'"
             #Write-Information $filter -InformationAction Continue
