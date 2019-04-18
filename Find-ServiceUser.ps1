@@ -35,8 +35,8 @@ Function Find-ServiceUser {
         } 
     }
     else {
-        Write-Verbose -Message "$computer`: Connection failed!"
-        Write-Information -MessageData "$computer`: Connection failed!" -InformationAction Continue
+        Write-Verbose -Message "$computer offline?"
+        Write-Information -MessageData "$computer offline?" -InformationAction Continue
         return $null
     }
 }# end function Find-ServiceUser
