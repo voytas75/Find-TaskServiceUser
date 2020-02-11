@@ -17,7 +17,7 @@ $oldProtocol = [Net.ServicePointManager]::SecurityProtocol
 # We switch to using TLS 1.2 because GitHub closes the connection if it uses 1.0 or 1.1
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 try {
-    $response = Invoke-WebRequest -URI $url | ConvertFrom-Json
+    $response = Invoke-WebRequest -URI $url | ConvertFrom-Json #DevSkim: ignore DS104456 
     if ([System.Version]$response.name -gt [System.Version]$ModuleVersion)
     {
        Write-Information "There is a newer version available. Run 'Update-Module -Name Find-TaskServiceUser' to update to the latest version." -InformationAction Continue
