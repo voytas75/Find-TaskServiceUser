@@ -1,5 +1,5 @@
 Function Find-ServiceUser {
-    [CmdletBinding()]
+    #[CmdletBinding()]
     param (
         [parameter(mandatory = $true, position = 0)]
         [string[]]
@@ -15,8 +15,10 @@ Function Find-ServiceUser {
     )
     $user = $user.trim()
     $computer = $computer.trim()
+    $service_ = $false
+
     try {
-        Test-Connection -ComputerName $computer -Count 1 -Quiet -ErrorAction SilentlyContinue
+        Test-Connection -ComputerName $computer -Count 1 -Quiet -ErrorAction SilentlyContinue | Out-Null
     }
     catch {
         Write-Verbose -Message "$computer offline?"
@@ -31,14 +33,42 @@ Function Find-ServiceUser {
         $filter = "startname LIKE '%$($user)%'"
     }
     Write-Verbose -Message "WMI query for system services."
-    try {
-        $service_ = Get-CimInstance -classname win32_service -filter "$filter" -ComputerName $computer -ErrorAction Stop
-    } 
-    catch {
-        Write-Error -Message "Failed WMI query for system services with Service Logon Account as ""$user"": $_"
+    #if computer is localhost then WMI query has no -computername
+    if ($computer -eq $env:COMPUTERNAME) {
+        try {
+            $service_ = Get-CimInstance -classname win32_service -filter "$filter" -ErrorAction Stop
+        } 
+        catch {
+            Write-Error -Message "Failed WMI query for system services with Service Logon Account as ""$user"": $_"
+        }
+        #Write-Debug ((get-variable "service_").value)
+        #(get-variable "service_").value
+        if ($service_) {
+            Write-Verbose -Message "Return WMI query data"
+            return $service_
+        } else {
+            Write-Verbose -Message "NO WMI query data"
+            $out_variable = (Get-Variable service_).Value
+            Write-Debug -message "Return data from inside 'Find-ServiceUser': $out_variable" -InformationAction Continue
+            return $false
+        }
+    }  else {
+        try {
+            $service_ = Get-CimInstance -classname win32_service -filter "$filter" -ComputerName $computer -ErrorAction Stop
+        } 
+        catch {
+            Write-Error -Message "Failed WMI query for system services with Service Logon Account as ""$user"": $_"
+        }
+        #Write-Debug ((get-variable "service_").value)
+        #(get-variable "service_").value
+        if ($service_) {
+            Write-Verbose -Message "Return WMI query data"
+            return $service_
+        } else {
+            Write-Verbose -Message "NO WMI query data"
+            $out_variable = (Get-Variable service_).Value
+            Write-Debug -message "Return data from inside 'Find-ServiceUser': $out_variable" -InformationAction Continue
+            return $false
+        }
     }
-    if ($service_) {
-        Write-Verbose -Message "Return WMI query data"
-        return $service_
-    } 
 }# end function Find-ServiceUser

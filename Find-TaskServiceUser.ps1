@@ -187,7 +187,7 @@ DONATION: If you want to support my work https://www.paypal.com/cgi-bin/webscr?c
                         }
                     }
                 }
-                #Services
+                #Service
                 if ($service) {    
                     if (-not $Minimal) {
                         Write-Output "Finding system services with user: ""$($user_item.toupper())"" on machine: ""$($item.toupper())"""
@@ -196,12 +196,16 @@ DONATION: If you want to support my work https://www.paypal.com/cgi-bin/webscr?c
                         Write-Log "$(Get-Date): Finding services with user: ""$($user_item.toupper())"" on machine: ""$($item.toupper())"""
                     }
                     if ($Strict){
-                        $services = Find-ServiceUser -computer $item -user $user_item -strict | Sort-Object name
+                        Write-Verbose -Message "Find-ServiceUser with -Strict"
+                        $services = Find-ServiceUser -computer $item -user $user_item -strict
                     } else {
-                        $services = Find-ServiceUser -computer $item -user $user_item | Sort-Object name
+                        $services = Find-ServiceUser -computer $item -user $user_item
                     }
+                    $out_variable = (Get-Variable services).Value
+                    Write-Debug -message "Data from 'Find-ServiceUser': $out_variable" -InformationAction Continue
                     if ($services) { 
                         # services found
+                        $services = $services | Sort-Object name
                         Write-Verbose "Services result not null"
                         if ($Log) {
                             Write-Log "$(Get-Date): System services:"
