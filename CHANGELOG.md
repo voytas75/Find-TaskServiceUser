@@ -14,6 +14,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 - Fix problem with wrong results from services,
 - Fix out data from testing connection.
+- Minor changes
 
 ## 1.6.0 - 2019.04.09
 
