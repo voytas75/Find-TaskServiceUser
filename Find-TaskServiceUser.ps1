@@ -144,11 +144,11 @@ DONATION: If you want to support my work https://www.paypal.com/cgi-bin/webscr?c
                 Write-Progress -parentId 1 -activity "Searching on server" -status "$item" -percentComplete ($j++ / $Computer.count * 100)
                 #Tasks
                 if ($task) {
-                    if (!$Minimal) {
-                        Write-Output "Finding tasks with user: ""$($user_item.toupper())"" on machine: ""$($item.toupper())"""
+                    if (!$Minimal) { 
+                        Write-Output "Find scheduled tasks with the author or principal as ""$($user_item.toupper())"" on the computer ""$($item.toupper())""."
                     }
                     if ($Log) {
-                        Write-Log "$(Get-Date): Finding tasks with user: ""$($user_item.toupper())"" on machine: ""$($item.toupper())"""
+                        Write-Log "$(Get-Date): Find scheduled tasks with the author or principal as ""$($user_item.toupper())"" on the computer ""$($item.toupper())""."
                     }
                     if ($Strict) {
                         $tasks = Find-TaskUser -server $item -user $user_item -Strict | Sort-Object taskname
@@ -175,25 +175,28 @@ DONATION: If you want to support my work https://www.paypal.com/cgi-bin/webscr?c
                         }
                     }
                     else {
-                        # tasks not found
+                        #Tasks not found
                         if ($Log) {
-                            Write-Log "$(Get-Date): No scheduled tasks or no data from ""$item"" for user ""$user_item"""
+                            #1.6.0. Write-Log "$(Get-Date): No scheduled tasks or no data from ""$item"" for user ""$user_item"""
+                            Write-Log "$(Get-Date): No scheduled tasks found (or no data)."
                         }
                         if ($Minimal) {
                             $tasks_count = $t
                         }
                         else {
-                            Write-Output "No scheduled tasks or no data from ""$item"" for user ""$user_item"""
+                            #1.6.0. Write-Output "No scheduled tasks or no data from ""$item"" for user ""$user_item"""
+                            Write-Output "No scheduled tasks found (or no data)."
+                            
                         }
                     }
                 }
                 #Service
                 if ($service) {    
-                    if (-not $Minimal) {
-                        Write-Output "Finding system services with user: ""$($user_item.toupper())"" on machine: ""$($item.toupper())"""
+                    if (-not $Minimal) {#F"ADMINISTRATOR"  "XXX".
+                        Write-Output "Find system services with the logon account as ""$($user_item.toupper())"" on the computer ""$($item.toupper())""."
                     }
                     if ($Log) {
-                        Write-Log "$(Get-Date): Finding services with user: ""$($user_item.toupper())"" on machine: ""$($item.toupper())"""
+                        Write-Log "$(Get-Date): Find system services with the logon account as ""$($user_item.toupper())"" on the computer ""$($item.toupper())""."
                     }
                     if ($Strict){
                         Write-Verbose -Message "Find-ServiceUser with -Strict"
@@ -226,13 +229,15 @@ DONATION: If you want to support my work https://www.paypal.com/cgi-bin/webscr?c
                         # services not found
                         Write-Verbose "Services result is null"
                         if ($Log) {
-                            Write-Log "$(Get-Date): No services found or no data from ""$item"" for user ""$user_item"""
+                            #1.6.0. Write-Log "$(Get-Date): No services found or no data from ""$item"" for user ""$user_item"""
+                            Write-Log "$(Get-Date): No system services found (or no data)."
                         }
                         if ($Minimal) {
                             $services_count = $s
                         }
                         else {
-                            Write-Output "No system services or no data from ""$item"" for user ""$user_item"""          
+                            #1.6.0. Write-Output "No system services or no data from ""$item"" for user ""$user_item"""
+                            Write-Output "No system services found (or no data)."          
                         }
                     }
                 }
