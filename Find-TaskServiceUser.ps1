@@ -106,6 +106,7 @@ DONATION: If you want to support my work https://www.paypal.com/cgi-bin/webscr?c
         [Switch]$OpenProjectSite
     )
     Begin {
+        $computer_local = $false
         if ($OpenProjectSite) {
             Start-Process 'https://github.com/voytas75/Find-TaskServiceUser'
             return
@@ -119,6 +120,7 @@ DONATION: If you want to support my work https://www.paypal.com/cgi-bin/webscr?c
             }
             if ($computer -eq $env:COMPUTERNAME) {
                 Write-Output "Set default computer: $env:COMPUTERNAME (localhost)"
+                $computer_local = $true
             }  
         }
         else {
@@ -145,10 +147,18 @@ DONATION: If you want to support my work https://www.paypal.com/cgi-bin/webscr?c
                 #Tasks
                 if ($task) {
                     if (!$Minimal) { 
-                        Write-Output "Find scheduled tasks with the author or principal as ""$($user_item.toupper())"" on the computer ""$($item.toupper())""."
+                        if ($computer_local) {
+                            Write-Output "Find scheduled tasks with the author or principal as ""$($user_item.toupper())"" on the computer ""$($item.toupper())"" (localhost)."
+                        } else {
+                            Write-Output "Find scheduled tasks with the author or principal as ""$($user_item.toupper())"" on the computer ""$($item.toupper())""."
+                        }
                     }
                     if ($Log) {
-                        Write-Log "$(Get-Date): Find scheduled tasks with the author or principal as ""$($user_item.toupper())"" on the computer ""$($item.toupper())""."
+                        if ($computer_local) {
+                            Write-Log "$(Get-Date): Find scheduled tasks with the author or principal as ""$($user_item.toupper())"" on the computer ""$($item.toupper())"" (localhost)."
+                        } else {
+                            Write-Log "$(Get-Date): Find scheduled tasks with the author or principal as ""$($user_item.toupper())"" on the computer ""$($item.toupper())""."
+                        }
                     }
                     if ($Strict) {
                         $tasks = Find-TaskUser -server $item -user $user_item -Strict | Sort-Object taskname
@@ -192,11 +202,19 @@ DONATION: If you want to support my work https://www.paypal.com/cgi-bin/webscr?c
                 }
                 #Service
                 if ($service) {    
-                    if (-not $Minimal) {#F"ADMINISTRATOR"  "XXX".
-                        Write-Output "Find system services with the logon account as ""$($user_item.toupper())"" on the computer ""$($item.toupper())""."
+                    if (-not $Minimal) {
+                        if ($computer_local) {
+                            Write-Output "Find system services with the logon account as ""$($user_item.toupper())"" on the computer ""$($item.toupper())"" (localhost)."
+                        } else {
+                            Write-Output "Find system services with the logon account as ""$($user_item.toupper())"" on the computer ""$($item.toupper())""."
+                        }
                     }
                     if ($Log) {
-                        Write-Log "$(Get-Date): Find system services with the logon account as ""$($user_item.toupper())"" on the computer ""$($item.toupper())""."
+                        if ($computer_local) {
+                            Write-Log "$(Get-Date): Find system services with the logon account as ""$($user_item.toupper())"" on the computer ""$($item.toupper())"" (localhost)."
+                        } else {
+                            Write-Log "$(Get-Date): Find system services with the logon account as ""$($user_item.toupper())"" on the computer ""$($item.toupper())""."
+                        }
                     }
                     if ($Strict){
                         Write-Verbose -Message "Find-ServiceUser with -Strict"
