@@ -14,12 +14,18 @@ Computer to find tasks/services. Default value is 'localhost' ($env:COMPUTERNAME
 A Switch to look for scheduled tasks where user name is matched.
 .PARAMETER Service
 A Switch to look for system services where user name is matched.
+.PARAMETER Strict
+Find tasks, services by exact username.
 .PARAMETER Minimal
 A switch to enable minimalistic results. Object containing the computer name, number of tasks and/or number of services only. With -Log information about log file path is displayed but log file is not minimal. The return value is en object.
 .PARAMETER Export
 Enable exporting results objectsr to file (using "Export-Clixml"). Export file path is defined in "Exportpath" parameter.
 .PARAMETER Exportpath
 File name path to export results finding scheduled tasks and/or system services.
+.PARAMETER ExportJSON
+Enable exporting results as JSON object.
+.PARAMETER ExportJSONpath
+File name path for JSON export.
 .PARAMETER Log
 A switch to enable logging of output data to a log file. The log file with the path is defined in "LogFile" parameter.
 .PARAMETER Logfile
