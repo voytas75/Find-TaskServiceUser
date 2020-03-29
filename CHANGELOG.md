@@ -8,12 +8,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Added
 
-- Add `-OpenProjectSite` to open default browser with github project site.
+- Add `-OpenProjectSite` to open default browser with github project site,
+- Add description `.PARAMETER` for missing parameters.
 
 ### Changed
 
 - Fix problem with wrong results from services,
-- Fix out data from testing connection.
+- Fix out data from process of testing connection.
 - Minor changes
 
 ## 1.6.0 - 2019.04.09
