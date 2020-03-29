@@ -116,10 +116,10 @@ DONATION: If you want to support my work https://www.paypal.com/cgi-bin/webscr?c
         } 
         if (-not $Minimal) {
             if ($user -eq "Administrator") {
-                Write-Output "Set default user: Administrator"
+                Write-Output "Set default user: ""ADMINISTRATOR"""
             }
             if ($computer -eq $env:COMPUTERNAME) {
-                Write-Output "Set default computer: $env:COMPUTERNAME (localhost)"
+                Write-Output "Set default computer: ""$($env:COMPUTERNAME.toupper())"" (localhost)"
                 $computer_local = $true
             }  
         }
