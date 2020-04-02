@@ -19,12 +19,13 @@ Function Find-ServiceUser {
 
     try {
         Write-Verbose -Message "Test connection to computer $computer"
-        Test-Connection -ComputerName $computer -Count 1 -Quiet -ErrorAction SilentlyContinue | Out-Null
+        Test-Connection -ComputerName $computer -Count 1 -ErrorAction Stop | Out-Null
     }
     catch {
         Write-Verbose -Message "Error testing connection to computer $($computer.toupper()). Offline?"
         Write-Information -MessageData "Error testing connection to computer $($computer.toupper()). Offline?" -InformationAction Continue
         return $null
+        #return $false
     }
     if ($Strict) {
         $filter = "startname = '$($user)'"
