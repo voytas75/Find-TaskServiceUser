@@ -50,7 +50,7 @@ PS> $data
 
 Description
 -----------
-Find tasks and services on server "WSRV04" for "SYSTEM" user and return a minimalistic result as custom object `$data`.
+Find tasks and services on computer "WSRV04" for "SYSTEM" user and return a minimalistic result as custom object `$data`.
 .EXAMPLE
 PS> "WSRV01","WSRV10" | Find-TaskServiceUser -Service -Task -Export
 PS> $data = Import-Clixml "C:\Users\test_user\Documents\Find-TaskServiceUser.XML"
@@ -147,11 +147,11 @@ DONATION: If you want to support my work https://www.paypal.com/cgi-bin/webscr?c
     Process {
         foreach ($user_item in $User) {
             $user_item = $user_item.trim()
-            Write-Progress -id 1 -activity "Searching user" -status "$user_item" -percentComplete ($i++ / $user.Count * 100)
+            Write-Progress -id 1 -activity "User search" -status "$user_item" -percentComplete ($i++ / $user.Count * 100)
             $j = 1 #write-progress
             foreach ($item in $Computer) {
                 $item = $item.trim()
-                Write-Progress -parentId 1 -activity "Searching on server" -status "$item" -percentComplete ($j++ / $Computer.count * 100)
+                Write-Progress -parentId 1 -activity "Searching on computer" -status "$item" -percentComplete ($j++ / $Computer.count * 100)
                 #Tasks
                 if ($task) {
                     if (!$Minimal) { 

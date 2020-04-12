@@ -6,7 +6,7 @@ It is a powershell module for finding scheduled tasks and system services on a l
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
+These instructions will get you a copy of the project up and running on your local computer for development and testing purposes.
 
 ### Install module
 
@@ -50,7 +50,7 @@ PS> @("WSRV01","WSRV02"), "WSRV03" | Find-TaskServiceUser -Task -User "BobbyK"
 
 #### Example 4
 
-Find tasks and services on server "WSRV04" for "SYSTEM" user and return a minimalistic result as custom object `$data`:
+Find tasks and services on conputer "WSRV04" for "SYSTEM" user and return a minimalistic result as custom object `$data`:
 
 ```powershell
 PS> $data = Find-TaskServiceUser -Task -Service -Server "WSRV04" -User "SYSTEM" -Minimal
@@ -59,7 +59,7 @@ PS> $data
 
 #### Example 5
 
-Find tasks and services on server "WSRV04" for "JohnK" user. Display results and save it as object in XML file. Import object data from XML and display tasks and services separately:
+Find tasks and services on computer "WSRV04" for "JohnK" user. Display results and save it as object in XML file. Import object data from XML and display tasks and services separately:
 
 ```powershell
 PS> Find-TaskServiceUser -Task -Service -Server "WSRV04" -User "JohnK" -Export

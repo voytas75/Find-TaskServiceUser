@@ -52,7 +52,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Added
 
-- Added test connection to server,
+- Added test connection to computer,
 - Result's sorting,
 - Added more examples,
 - Online checker module's version,
