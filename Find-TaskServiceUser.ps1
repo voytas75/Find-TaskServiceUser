@@ -224,6 +224,7 @@ DONATION: If you want to support my work https://www.paypal.com/cgi-bin/webscr?c
                             Write-Log "$(Get-Date): Find system services with the logon account as ""$($user_item.toupper())"" on the computer ""$($item.toupper())""."
                         }
                     }
+                    # https://www.reddit.com/r/PowerShell/comments/fzzf1u/i_would_like_to_show_off_my_first_module_to_find/fn731ab?utm_source=share&utm_medium=web2x
                     if ($Strict){
                         Write-Verbose -Message "Find-ServiceUser with -Strict"
                         $services = Find-ServiceUser -computer $item -user $user_item -strict
