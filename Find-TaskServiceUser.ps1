@@ -67,6 +67,8 @@ https://www.powershellgallery.com/packages/Find-TaskServiceUser
 .NOTES
 ICON CREDITS: Module icon made by [Freepik](https://www.freepik.com/) from [Flaticon](https://www.flaticon.com/) is licensed [CC 3.0 BY](http://creativecommons.org/licenses/by/3.0/)
 DONATION: If you want to support my work https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ZQJXFYKHL7JUA&currency_code=PLN&source=url
+My post on reddit to request for comments: https://www.reddit.com/r/PowerShell/comments/fzzf1u/i_would_like_to_show_off_my_first_module_to_find/
+Weekend Scripter: Welcome to the PowerShell Information Stream: https://devblogs.microsoft.com/scripting/weekend-scripter-welcome-to-the-powershell-information-stream/
 #>
     [CmdletBinding()]
     Param(
