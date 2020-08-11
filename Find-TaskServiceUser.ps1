@@ -14,16 +14,24 @@ Computer to find tasks/services. Default value is 'localhost' ($env:COMPUTERNAME
 A Switch to look for scheduled tasks where user name is matched.
 .PARAMETER Service
 A Switch to look for system services where user name is matched.
+.PARAMETER Strict
+Find tasks, services by exact username.
 .PARAMETER Minimal
 A switch to enable minimalistic results. Object containing the computer name, number of tasks and/or number of services only. With -Log information about log file path is displayed but log file is not minimal. The return value is en object.
 .PARAMETER Export
 Enable exporting results objectsr to file (using "Export-Clixml"). Export file path is defined in "Exportpath" parameter.
 .PARAMETER Exportpath
 File name path to export results finding scheduled tasks and/or system services.
+.PARAMETER ExportJSON
+Enable exporting results as JSON object.
+.PARAMETER ExportJSONpath
+File name path for JSON export.
 .PARAMETER Log
 A switch to enable logging of output data to a log file. The log file with the path is defined in "LogFile" parameter.
 .PARAMETER Logfile
 Path with file name where logging output. Default value is [$env:TEMP]\find-taskserviceuser.log. Works only with Log switch.
+.PARAMETER OpenProjectSite
+The switch opens the project web page on GitHub and ends the script operation.
 .EXAMPLE
 PS> Find-TaskServiceUser -Computer "WSRV00" -User "BobbyK" -Service -Task -Log
 
@@ -42,7 +50,7 @@ PS> $data
 
 Description
 -----------
-Find tasks and services on server "WSRV04" for "SYSTEM" user and return a minimalistic result as custom object `$data`.
+Find tasks and services on computer "WSRV04" for "SYSTEM" user and return a minimalistic result as custom object `$data`.
 .EXAMPLE
 PS> "WSRV01","WSRV10" | Find-TaskServiceUser -Service -Task -Export
 PS> $data = Import-Clixml "C:\Users\test_user\Documents\Find-TaskServiceUser.XML"
@@ -59,6 +67,8 @@ https://www.powershellgallery.com/packages/Find-TaskServiceUser
 .NOTES
 ICON CREDITS: Module icon made by [Freepik](https://www.freepik.com/) from [Flaticon](https://www.flaticon.com/) is licensed [CC 3.0 BY](http://creativecommons.org/licenses/by/3.0/)
 DONATION: If you want to support my work https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ZQJXFYKHL7JUA&currency_code=PLN&source=url
+My post on reddit to request for comments: https://www.reddit.com/r/PowerShell/comments/fzzf1u/i_would_like_to_show_off_my_first_module_to_find/
+Weekend Scripter: Welcome to the PowerShell Information Stream: https://devblogs.microsoft.com/scripting/weekend-scripter-welcome-to-the-powershell-information-stream/
 #>
     [CmdletBinding()]
     Param(
@@ -98,18 +108,29 @@ DONATION: If you want to support my work https://www.paypal.com/cgi-bin/webscr?c
         [switch]$Log,
 
         [parameter(Mandatory = $false, HelpMessage = 'Log file path. Default is ''[$env:TEMP]\Find-TaskServiceUser.log''.')]
-        [string]$Logfile = "$env:TEMP\Find-TaskServiceUser.log"
+        [string]$Logfile = "$env:TEMP\Find-TaskServiceUser.log",
+
+        [parameter(Mandatory = $false, HelpMessage = 'Opens the project page on GitHub.')]
+        [Switch]$OpenProjectSite
     )
     Begin {
+        $computer_local = $false
+        if ($computer -eq $env:COMPUTERNAME) {
+            $computer_local = $true
+        }
+        if ($OpenProjectSite) {
+            Start-Process 'https://github.com/voytas75/Find-TaskServiceUser'
+            return
+        }
         if (!$service -and !$task) { 
             $Service = $Task = $true
         } 
         if (-not $Minimal) {
             if ($user -eq "Administrator") {
-                Write-Output "Set default user: Administrator"
+                Write-Output "Set default user: ""ADMINISTRATOR"""
             }
-            if ($computer -eq $env:COMPUTERNAME) {
-                Write-Output "Set default computer: $env:COMPUTERNAME (localhost)"
+            if ($computer_local) {
+                Write-Output "Set default computer: ""$($env:COMPUTERNAME.toupper())"" (localhost)"
             }  
         }
         else {
@@ -128,18 +149,26 @@ DONATION: If you want to support my work https://www.paypal.com/cgi-bin/webscr?c
     Process {
         foreach ($user_item in $User) {
             $user_item = $user_item.trim()
-            Write-Progress -id 1 -activity "Searching user" -status "$user_item" -percentComplete ($i++ / $user.Count * 100)
+            Write-Progress -id 1 -activity "User search" -status "$user_item" -percentComplete ($i++ / $user.Count * 100)
             $j = 1 #write-progress
             foreach ($item in $Computer) {
                 $item = $item.trim()
-                Write-Progress -parentId 1 -activity "Searching on server" -status "$item" -percentComplete ($j++ / $Computer.count * 100)
+                Write-Progress -parentId 1 -activity "Searching on computer" -status "$item" -percentComplete ($j++ / $Computer.count * 100)
                 #Tasks
                 if ($task) {
-                    if (!$Minimal) {
-                        Write-Output "Finding tasks with user: ""$($user_item.toupper())"" on machine: ""$($item.toupper())"""
+                    if (!$Minimal) { 
+                        if ($computer_local) {
+                            Write-Output "Find scheduled tasks with the author or principal as ""$($user_item.toupper())"" on the computer ""$($item.toupper())"" (localhost)."
+                        } else {
+                            Write-Output "Find scheduled tasks with the author or principal as ""$($user_item.toupper())"" on the computer ""$($item.toupper())""."
+                        }
                     }
                     if ($Log) {
-                        Write-Log "$(Get-Date): Finding tasks with user: ""$($user_item.toupper())"" on machine: ""$($item.toupper())"""
+                        if ($computer_local) {
+                            Write-Log "$(Get-Date): Find scheduled tasks with the author or principal as ""$($user_item.toupper())"" on the computer ""$($item.toupper())"" (localhost)."
+                        } else {
+                            Write-Log "$(Get-Date): Find scheduled tasks with the author or principal as ""$($user_item.toupper())"" on the computer ""$($item.toupper())""."
+                        }
                     }
                     if ($Strict) {
                         $tasks = Find-TaskUser -server $item -user $user_item -Strict | Sort-Object taskname
@@ -166,33 +195,49 @@ DONATION: If you want to support my work https://www.paypal.com/cgi-bin/webscr?c
                         }
                     }
                     else {
-                        # tasks not found
+                        #Tasks not found
                         if ($Log) {
-                            Write-Log "$(Get-Date): No scheduled tasks or no data from ""$item"" for user ""$user_item"""
+                            #1.6.0. Write-Log "$(Get-Date): No scheduled tasks or no data from ""$item"" for user ""$user_item"""
+                            Write-Log "$(Get-Date): No scheduled tasks found (or no data)."
                         }
                         if ($Minimal) {
                             $tasks_count = $t
                         }
                         else {
-                            Write-Output "No scheduled tasks or no data from ""$item"" for user ""$user_item"""
+                            #1.6.0. Write-Output "No scheduled tasks or no data from ""$item"" for user ""$user_item"""
+                            Write-Output "No scheduled tasks found (or no data)."
+                            
                         }
                     }
                 }
-                #Services
+                #Service
                 if ($service) {    
                     if (-not $Minimal) {
-                        Write-Output "Finding system services with user: ""$($user_item.toupper())"" on machine: ""$($item.toupper())"""
+                        if ($computer_local) {
+                            Write-Output "Find system services with the logon account as ""$($user_item.toupper())"" on the computer ""$($item.toupper())"" (localhost)."
+                        } else {
+                            Write-Output "Find system services with the logon account as ""$($user_item.toupper())"" on the computer ""$($item.toupper())""."
+                        }
                     }
                     if ($Log) {
-                        Write-Log "$(Get-Date): Finding services with user: ""$($user_item.toupper())"" on machine: ""$($item.toupper())"""
+                        if ($computer_local) {
+                            Write-Log "$(Get-Date): Find system services with the logon account as ""$($user_item.toupper())"" on the computer ""$($item.toupper())"" (localhost)."
+                        } else {
+                            Write-Log "$(Get-Date): Find system services with the logon account as ""$($user_item.toupper())"" on the computer ""$($item.toupper())""."
+                        }
                     }
+                    # https://www.reddit.com/r/PowerShell/comments/fzzf1u/i_would_like_to_show_off_my_first_module_to_find/fn731ab?utm_source=share&utm_medium=web2x
                     if ($Strict){
-                        $services = Find-ServiceUser -computer $item -user $user_item -strict | Sort-Object name
+                        Write-Verbose -Message "Find-ServiceUser with -Strict"
+                        $services = Find-ServiceUser -computer $item -user $user_item -strict
                     } else {
-                        $services = Find-ServiceUser -computer $item -user $user_item | Sort-Object name
+                        $services = Find-ServiceUser -computer $item -user $user_item
                     }
+                    $out_variable = (Get-Variable services).Value
+                    Write-Debug -message "Data from 'Find-ServiceUser': $out_variable" -InformationAction Continue
                     if ($services) { 
                         # services found
+                        $services = $services | Sort-Object name
                         Write-Verbose "Services result not null"
                         if ($Log) {
                             Write-Log "$(Get-Date): System services:"
@@ -213,13 +258,15 @@ DONATION: If you want to support my work https://www.paypal.com/cgi-bin/webscr?c
                         # services not found
                         Write-Verbose "Services result is null"
                         if ($Log) {
-                            Write-Log "$(Get-Date): No services found or no data from ""$item"" for user ""$user_item"""
+                            #1.6.0. Write-Log "$(Get-Date): No services found or no data from ""$item"" for user ""$user_item"""
+                            Write-Log "$(Get-Date): No system services found (or no data)."
                         }
                         if ($Minimal) {
                             $services_count = $s
                         }
                         else {
-                            Write-Output "No system services or no data from ""$item"" for user ""$user_item"""          
+                            #1.6.0. Write-Output "No system services or no data from ""$item"" for user ""$user_item"""
+                            Write-Output "No system services found (or no data)."          
                         }
                     }
                 }
@@ -266,7 +313,7 @@ DONATION: If you want to support my work https://www.paypal.com/cgi-bin/webscr?c
             Write-Information -MessageData "Export XML File: $($Exportpath)" -InformationAction Continue
             Write-Information -MessageData "Export XML File: You can import file using 'Import-Clixml `"$($Exportpath)`"'" -InformationAction Continue
             $task_all_unique = $tasks_all | Sort-Object taskname -Unique
-            $services_all_unique = $services_all | Sort-Object name -Unique
+            #$services_all_unique = $services_all | Sort-Object name -Unique
             $export_data = @{"Tasks" = $task_all_unique; "Services" = $services_all }
             #Add-Content -LiteralPath $Exportpath -Value $export_data -PassThru
             Export-Clixml -LiteralPath $Exportpath -InputObject $export_data
@@ -275,7 +322,7 @@ DONATION: If you want to support my work https://www.paypal.com/cgi-bin/webscr?c
             Write-Information -MessageData "Export JSON File: $($Exportjsonpath)" -InformationAction Continue
             Write-Information -MessageData "Export JSON File: You can import file using '`$json_data = Get-Content -Raw -Path `"$($Exportjsonpath)`" | ConvertFrom-Json'" -InformationAction Continue
             $task_all_unique = $tasks_all | Sort-Object taskname -Unique
-            $services_all_unique = $services_all | Sort-Object name -Unique
+            #$services_all_unique = $services_all | Sort-Object name -Unique
             $export_data = @{"Tasks" = $task_all_unique; "Services" = $services_all }
             $export_data | ConvertTo-Json | out-file $Exportjsonpath
         }

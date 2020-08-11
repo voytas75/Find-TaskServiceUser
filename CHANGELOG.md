@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.7.0 - 2020
+
+### Added
+
+- Add `-OpenProjectSite` to open default browser with github project site,
+- Add description `.PARAMETER` for missing parameters.
+
+### Changed
+
+- Fix problem with wrong results from services,
+- Fixed handling remote computers,
+- Minor changes.
+
 ## 1.6.0 - 2019.04.09
 
 ### Added
@@ -39,7 +52,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Added
 
-- Added test connection to server,
+- Added test connection to computer,
 - Result's sorting,
 - Added more examples,
 - Online checker module's version,
