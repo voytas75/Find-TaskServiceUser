@@ -142,7 +142,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Changed
 
 - Improved find of scheduled tasks,
-- Change in grouping the results of tasks and services. 
+- Change in grouping the results of tasks and services.
 
 ## 1.1.0 - 2019.03.30
 
