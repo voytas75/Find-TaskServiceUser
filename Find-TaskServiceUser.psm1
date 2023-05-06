@@ -1,5 +1,5 @@
 #Get files.
-$files  = @( Get-ChildItem -Path $PSScriptRoot\*.ps1 -ErrorAction SilentlyContinue )
+$files  = @( Get-ChildItem -Path $PSScriptRoot\functions\*.ps1 -ErrorAction SilentlyContinue )
 #Dot source the files
 Foreach ($import in @($files)) {
     Try {
