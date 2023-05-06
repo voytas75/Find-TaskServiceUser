@@ -1,6 +1,6 @@
 # ![https://www.freepik.com/](https://raw.githubusercontent.com/voytas75/Find-TaskServiceUser/master/Find-TaskServiceUser.png) Find-TaskServiceUser
 
-![Version](https://img.shields.io/badge/version-1.7.0-green) [![Codacy Badge](https://app.codacy.com/project/badge/Grade/6ffd84e783c64ef2abe47b34a2326b51)](https://app.codacy.com/gh/voytas75/Find-TaskServiceUser/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade) [![PowerShell Gallery](https://img.shields.io/powershellgallery/dt/find-taskserviceuser)](https://www.powershellgallery.com/packages/Find-TaskServiceUser)
+![Version](https://img.shields.io/badge/version-1.7.0-green) [![Codacy Badge](https://app.codacy.com/project/badge/Grade/6ffd84e783c64ef2abe47b34a2326b51)](https://app.codacy.com/gh/voytas75/Find-TaskServiceUser/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade) [![PowerShell Gallery](https://img.shields.io/powershellgallery/dt/find-taskserviceuser)](https://www.powershellgallery.com/packages/Find-TaskServiceUser) [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/A0A6KYBUS)
 
 It is a powershell module for finding scheduled tasks and system services on a local or remote computer that are created or run as a given user.
 
