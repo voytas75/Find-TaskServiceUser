@@ -1,5 +1,5 @@
 #Get files.
-$files  = @( Get-ChildItem -Path $PSScriptRoot\functions\*.ps1 -ErrorAction SilentlyContinue )
+$files = @( Get-ChildItem -Path $PSScriptRoot\functions\*.ps1 -ErrorAction SilentlyContinue )
 #Dot source the files
 Foreach ($import in @($files)) {
     Try {
@@ -18,13 +18,11 @@ $oldProtocol = [Net.ServicePointManager]::SecurityProtocol
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 try {
     $response = Invoke-WebRequest -URI $url | ConvertFrom-Json #DevSkim: ignore DS104456 
-    if ([System.Version]$response.name -gt [System.Version]$ModuleVersion)
-    {
-       Write-Information "There is a newer version available. Run 'Update-Module -Name Find-TaskServiceUser' to update to the latest version." -InformationAction Continue
-       Write-Information "Alternatively, you can download it manually from https://github.com/voytas75/Find-TaskServiceUser/releases/latest" -InformationAction Continue
+    if ([System.Version]$response.name -gt [System.Version]$ModuleVersion) {
+        Write-Information "There is a newer version available. Run 'Update-Module -Name Find-TaskServiceUser' to update to the latest version." -InformationAction Continue
+        Write-Information "Alternatively, you can download it manually from https://github.com/voytas75/Find-TaskServiceUser/releases/latest" -InformationAction Continue
     }
-    else
-    {
+    else {
         Write-Information "You have the latest version ($ModuleVersion) installed." -InformationAction Continue
     }
 }
