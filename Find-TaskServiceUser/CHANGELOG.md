@@ -1,21 +1,21 @@
-# Find-TaskServiceUser Change Log
+# `Find-TaskServiceUser` Change Log
 
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## 1.8.0 - 2020
+## [1.8.0] - 2023.05.06
 
 ### Added
 
-- 
+- Folder for module,
+- Folders for functions and images.
 
 ### Changed
 
-- ,
-- Minor changes.
+- Update check (source: PowerShell Gallery).
 
-## 1.7.0 - 2020.08.11
+## [1.7.0] - 2020.08.11
 
 ### Added
 
@@ -29,7 +29,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Fixed handling remote computers,
 - Minor changes.
 
-## 1.6.0 - 2019.04.09
+## [1.6.0] - 2019.04.09
 
 ### Added
 
@@ -42,25 +42,25 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Clearing and formatting the code,
 - Minor changes.
 
-## 1.5.3 - 2019.04.09
+## [1.5.3] - 2019.04.09
 
 ### Changed
 
 - A patch to compare the version number in module root file.
 
-## 1.5.2 - 2019.04.09
+## [1.5.2] - 2019.04.09
 
 ### Changed
 
 - Fix for not displaying information when importing the module.
 
-## 1.5.1 - 2019.04.09
+## [1.5.1] - 2019.04.09
 
 ### Changed
 
 - Fix for scenario when there is no local and remote `get-scheduledtask`, added `invoke-SCHTasks`.
 
-## 1.5.0 - 2019.04.07
+## [1.5.0] - 2019.04.07
 
 ### Added
 
@@ -76,7 +76,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Move from `Write-Host` to `Write-Output`,
 - Minor changes.
 
-## 1.4.0 - 2019.04.04
+## [1.4.0] - 2019.04.04
 
 ### Added
 
@@ -90,7 +90,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Changed `Get-WmiObject` to `Get-CimInstance`,
 - Minor changes.
 
-## 1.3.4 - 2019.04.02
+## [1.3.4] - 2019.04.02
 
 ### Added
 
@@ -107,25 +107,25 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 - Release notes from main module file.
 
-## 1.3.3 - 2019.04.01
+## [1.3.3] - 2019.04.01
 
 ### Added
 
 - Description of the `-Minimal` parameter.
 
-## 1.3.2 - 2019.04.01
+## [1.3.2] - 2019.04.01
 
 ### Changed
 
 - Minor fix for `iconuri` in manifest file.
 
-## 1.3.1 - 2019.04.01
+## [1.3.1] - 2019.04.01
 
 ### Changed
 
 - Minor fix for `iconuri`.
 
-## 1.3.0 - 2019.04.01
+## [1.3.0] - 2019.04.01
 
 ### Added
 
@@ -137,26 +137,26 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 - Fix for change in grouping the results of tasks and services.
 
-## 1.2.0 - 2019.03.30
+## [1.2.0] - 2019.03.30
 
 ### Changed
 
 - Improved find of scheduled tasks,
 - Change in grouping the results of tasks and services.
 
-## 1.1.0 - 2019.03.30
+## [1.1.0] - 2019.03.30
 
 ### Changed
 
 - Changed private functions names.
 
-## 1.0.1 - 2019.03.29
+## [1.0.1] - 2019.03.29
 
 ### Changed
 
 - Minor bug fixes.
 
-## 1.0.0 - 2019.03.27
+## [1.0.0] - 2019.03.27
 
 ### Added
 
